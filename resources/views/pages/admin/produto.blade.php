@@ -39,7 +39,7 @@
                                 <td>{{$dados->nome}}</td>
                                 <td>{{$dados->descricao}}</td>
                                 <td>{{$dados->categoria}}</td>
-                                <td>{{$dados->id_funcionario}}</td>
+                                <td>{{$dados->funcionario->nome}}</td>
                                 <td>
                                     <a href="#Cadastrar" data-toggle="modal" class="text-primary" onclick="editar({{$dados}})" ><i class="fa fa-edit"></i></a>
                                     <a href="{{route('produto.destroy',$dados->id)}}" class="text-danger"><i class="fa fa-trash"></i></a>

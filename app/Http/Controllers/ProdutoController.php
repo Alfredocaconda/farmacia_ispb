@@ -13,7 +13,7 @@ class ProdutoController extends Controller
     public function index()
     {
         //
-        $valor=produto::orderby('nome','asc')->get();
+        $valor=produto::orderby('nome','desc','funcionario')->get();
         return view('pages.admin.produto',compact('valor'));
     }
 
