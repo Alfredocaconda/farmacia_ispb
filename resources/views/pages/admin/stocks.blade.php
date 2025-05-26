@@ -26,9 +26,11 @@
                     <table id="datatable" class="table data-tables table-striped">
                     <thead>
                         <tr class="ligth">
-                            <th>Nome</th>
-                            <th>Descrição</th>
-                            <th>Categoria</th>
+                            <th>Nome do Produto</th>
+                            <th>Preço do Produto</th>
+                            <th>Quantidade</th>
+                            <th>Data de Entrada</th>
+                            <th>Caducidade</th>
                             <th>Funcionario</th>
                             <th></th>
                         </tr>
@@ -36,9 +38,10 @@
                     <tbody>
                       @foreach ($stock as $dados)
                             <tr>
-                                <td>{{$dados->produto->nome}}</td>
-                                <td>{{$dados->preco}}</td>
-                                <td>{{$dados->quantidade}}</td>
+                                <td>{{$dados->produto->nome." / ".$dados->produto->descricao." / ".$dados->produto->categoria}}</td>
+                                <td>{{$dados->preco." KZ"}}</td>
+                                <td>{{$dados->qtd_stock}}</td>
+                                <td>{{$dados->data_entrada}}</td>
                                 <td>{{$dados->caducidade}}</td>
                                 <td>{{$dados->funcionario->nome}}</td>
                                 <td>

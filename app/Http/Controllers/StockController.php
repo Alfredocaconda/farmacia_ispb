@@ -15,7 +15,7 @@ class StockController extends Controller
 {
     if ($id) {
         // Buscar um único produto e seus stocks
-        $valor = produto::findOrFail($id);
+        $valor = produto::orderby('nome','desc')->findOrFail($id);
         $stock = stock::with('produto', 'funcionario')->where('id_produto', $id)->get();
     } else {
         // Buscar todos os produtos e todos os stocks

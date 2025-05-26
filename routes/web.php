@@ -5,7 +5,8 @@ use Livewire\Volt\Volt;
 use App\Http\Controllers\{
     FuncionarioController,
     ProdutoController,
-    StockController
+    StockController,
+    VendaController
 };
 Route::get('/', function () {
     return view('pages.admin.index');
@@ -21,3 +22,5 @@ Route::get('/produto/destroy/{id}',[ProdutoController::class,'destroy'])->name('
 Route::post('/stock/store',[StockController::class,'store'])->name('stock.store');
 Route::get('/stock/destroy/{id}',[StockController::class,'destroy'])->name('stock.destroy');
 Route::get('/stocks/{id?}', [StockController::class, 'index'])->name('stock.index');
+
+Route::resource('/venda',VendaController::class);

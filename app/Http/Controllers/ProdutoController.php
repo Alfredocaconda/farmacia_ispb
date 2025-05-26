@@ -25,27 +25,36 @@ class ProdutoController extends Controller
         
         //
         try {
-            //DEFINIR REGRAS DE VALIDAÇÃO
-            $rules=[
-            'nome' => ['required', 'string','regex:/^[a-zA-ZÀ-ÿ\s]+$/'],
-            'descricao' => ['required'],
-            'categoria' => ['required'],
+                //DEFINIR REGRAS DE VALIDAÇÃO
+                $rules = [
+                'nome' => ['required', 'string', 'regex:/^[a-zA-ZÀ-ÿ\s]+$/'],
+                'descricao' => ['required'],
+                'categoria' => ['required', 'string', 'regex:/^[a-zA-ZÀ-ÿ\s]+$/'],
             ];
-            //VALIDAÇÃO DOS CAMPOS
-            $request->validate($rules,[
-                'nome'=>'O NOME É OBRIGATÓRIO!',
-                'descricao'=>'O DESCRIÇÃO É OBRIGATÓRIO!',
-                'categoria'=>'O CATEGORIA É OBRIGATÓRIO!',
+
+            $request->validate($rules, [
+                'nome.required' => 'O NOME É OBRIGATÓRIO!',
+                'nome.regex' => 'O NOME DEVE CONTER APENAS LETRAS!',
+                'descricao.required' => 'A DESCRIÇÃO É OBRIGATÓRIA!',
+                'categoria.required' => 'A CATEGORIA É OBRIGATÓRIA!',
+                'categoria.regex' => 'A CATEGORIA DEVE CONTER APENAS LETRAS!',
             ]);
 
-            //CODIGO PARA VERIFICAR SE É EDIÇÃO OU NOVO CADASTRO
+            // Verificar se já existe produto igual
+            $produtoDuplicado = produto::where('nome', $request->nome)
+                ->where('descricao', $request->descricao)
+                ->where('categoria', $request->categoria);
+
             if ($request->filled('id')) {
-                # code...
-                $valor=produto::find($request->id);
-            } else {
-                # code...
-                $valor=new produto();
+                $produtoDuplicado->where('id', '!=', $request->id);
             }
+
+            if ($produtoDuplicado->exists()) {
+                return redirect()->back()->withInput()->with("ERRO", "JÁ EXISTE UM PRODUTO COM O MESMO NOME, DESCRIÇÃO E CATEGORIA.");
+            }
+
+            $valor = $request->filled('id') ? produto::find($request->id) : new produto();
+
             //PREENCHER OS CAMPOS DO FORMULARIO
             $valor->nome=$request->nome;
             $valor->descricao=$request->descricao;

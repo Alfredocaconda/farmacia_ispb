@@ -78,7 +78,7 @@
                           </a>
                       </li>
                     <li class=" ">
-                        <a href="" class="svg-icon">
+                        <a href="{{route('venda.index')}}" class="svg-icon">
                             <i class="fa fa-list-alt"></i>
                               <span class="ml-4">VENDAS</span>
                           </a>

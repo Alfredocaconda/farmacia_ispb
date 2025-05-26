@@ -11,16 +11,31 @@
                     <a href="#Cadastrar" data-toggle="modal" style="font-size: 20pt"><i class="fa fa-plus-circle"></i></a>
                 </div>
             </div>
-            @if(session('Error'))
-                    <div class="alert alert-danger">
-                        <p>{{session('Error')}}</p>
-                    </div>
-                @endif
-                @if(session('Sucesso'))
-                    <div class="alert alert-success">
-                        <p>{{session('Sucesso')}}</p>
-                    </div>
-                @endif
+            {{-- Mensagem de Sucesso --}}
+            @if (session('SUCESSO'))
+                <div class="alert alert-green">
+                    {{ session('SUCESSO') }}
+                </div>
+            @endif
+
+            {{-- Mensagem de Erro Geral --}}
+            @if (session('ERRO'))
+                <div class="alert alert-danger">
+                    {{ session('ERRO') }}
+                </div>
+            @endif
+
+            {{-- Erros de Validação --}}
+            @if ($errors->any())
+                <div class="alert alert-iq-warning">
+                    <ul>
+                        @foreach ($errors->all() as $erro)
+                            <li>{{ $erro }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="card-body">
                 <div class="table-responsive">
                     <table id="datatable" class="table data-tables table-striped">
