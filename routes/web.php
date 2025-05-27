@@ -11,7 +11,7 @@ use App\Http\Controllers\{
 Route::get('/', function () {
     return view('pages.admin.index');
 });
-Route::resource('/funcionario', FuncionarioController::class);
+Route::resource('/funcionario', FuncionarioController::class,);
 Route::post('/funcionario/store', [FuncionarioController::class,'store'])->name('funcionario.store');
 Route::get('/funcionario/destroy/{id}',[FuncionarioController::class,'destroy'])->name('funcionario.destroy');
 

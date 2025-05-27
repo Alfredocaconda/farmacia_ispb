@@ -36,39 +36,69 @@ class StockController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
         try {
-                     
-            if ($request->filled('id')) {
-                # code...
-                $valor=stock::find($request->id);
-            } else {
-                # code...
-                $valor=new stock();
+              // Se for para aumentar a quantidade
+        if ($request->filled('id') && $request->tipo === 'aumentar') {
+            $stock = Stock::find($request->id);
+            if (!$stock) {
+                return redirect()->route('stock.index')->with("ERRO", "Stock não encontrado.");
             }
-            //PREENCHER OS CAMPOS DO FORMULARIO
-            //$valor->id_funcionario=Auth::funcionario();
-            $valor->id_funcionario=1;
-            $valor->id_produto=$request->id_produto;
-            $valor->preco=$request->preco;
-            $valor->qtd_stock=$request->qtd_stock;
-            $valor->caducidade=$request->caducidade;
-            $valor->data_entrada=now();
-            $valor->save();
-            
-            // Redirecionar para a listagem completa (sem ID)
-            return redirect()->route('stock.index')->with("SUCESSO","STOCK CADASTRADO COM SUCESSO");
-        } catch (validactionException $e) {
-            //throw $th;
-            return redirect()->route('stock.index')->witherror($e->validator)->withInput();
-        } catch(QueryExecption $e){
-            return redirect()->route('stock.index')->with("ERRO","ERRO AO CADASTRAR O STOCK");
 
+            $stock->qtd_stock += $request->qtd_stock;
+            $stock->save();
+
+            return redirect()->route('stock.index')->with("SUCESSO", "QUANTIDADE AUMENTADA COM SUCESSO");
+        }
+        if ($request->filled('id')){
+             // EDIÇÃO NORMAL (atualiza tudo, inclusive quantidade)
+            $valor = Stock::find($request->id);
+            if (!$valor) {
+                return redirect()->route('stock.index')->with("ERRO", "Stock não encontrado.");
+            }
+                $valor->id_funcionario = 1; // Você pode trocar por auth()->user()->id
+                $valor->id_produto = $request->id_produto;
+                $valor->preco = $request->preco;
+                $valor->qtd_stock = $request->qtd_stock;
+                $valor->caducidade = $request->caducidade;
+                $valor->data_entrada = now();
+                $valor->save();
+
+                return redirect()->route('stock.index')->with("SUCESSO", "STOCK ATUALIZADO COM SUCESSO");
+            } else {
+                // Nova entrada: Verificar se o produto já tem stock
+                $valor = Stock::where('id_produto', $request->id_produto)->first();
+
+                if ($valor) {
+                    // Produto já tem stock, aumentar a quantidade
+                    $valor->qtd_stock += $request->qtd_stock;
+                    $valor->preco = $request->preco;
+                    $valor->caducidade = $request->caducidade;
+                    $valor->data_entrada = now();
+                    $valor->id_funcionario = 1;
+                    $valor->save();
+
+                    return redirect()->route('stock.index')->with("SUCESSO", "QUANTIDADE ATUALIZADA NO STOCK");
+                } else {
+                    // Produto novo no stock
+                    $valor = new Stock();
+                    $valor->id_funcionario = 1;
+                    $valor->id_produto = $request->id_produto;
+                    $valor->preco = $request->preco;
+                    $valor->qtd_stock = $request->qtd_stock;
+                    $valor->caducidade = $request->caducidade;
+                    $valor->data_entrada = now();
+                    $valor->save();
+
+                    return redirect()->route('stock.index')->with("SUCESSO", "STOCK CADASTRADO COM SUCESSO");
+                }
+            }
+        } catch (ValidationException $e) {
+            return redirect()->route('stock.index')->withErrors($e->validator)->withInput();
+        } catch (QueryException $e) {
+            return redirect()->route('stock.index')->with("ERRO", "ERRO AO CADASTRAR O STOCK");
         }
     }
-
     /**
      * Display the specified resource.
      */

@@ -27,7 +27,7 @@
                     <thead>
                         <tr class="ligth">
                             <th>Nome do Produto</th>
-                            <th>Preço do Produto</th>
+                            <th>Preço Unitário</th>
                             <th>Quantidade</th>
                             <th>Data de Entrada</th>
                             <th>Caducidade</th>
@@ -45,8 +45,11 @@
                                 <td>{{$dados->caducidade}}</td>
                                 <td>{{$dados->funcionario->nome}}</td>
                                 <td>
-                                    <a href="#Cadastrar" data-toggle="modal" class="text-primary" onclick="editar({{$dados}})" ><i class="fa fa-edit"></i></a>
-                                    <a href="{{route('stock.destroy',$dados->id)}}" class="text-danger"><i class="fa fa-trash"></i></a>
+                                <a href="#AumentarStock" data-toggle="modal" class="text-success" onclick="abrirModalAumentar({{ $dados->id }}, '{{ $dados->produto->nome }}')">
+                                  <i class="fa fa-plus-circle"></i>
+                                </a>
+                                <a href="#Cadastrar" data-toggle="modal" class="text-primary" onclick='editar(@json($dados))'><i class="fa fa-edit"></i></a>
+                                <a href="{{route('stock.destroy',$dados->id)}}" class="text-danger"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -74,11 +77,12 @@
                    <form action="{{route('stock.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
                          <input type="hidden" name="id" id="id">
+                         <input type="hidden" name="id_produto" id="id_produto" value="{{ $valor->id ?? '' }}">
                        @if($valor)
-                            <input type="hidden" name="id_produto" id="id_produto" value="{{ $valor->id }}">
                             <p><strong>Nome do Produto : </strong>{{ $valor->nome }}</p>
                         @else
-                            <p><strong>Selecione um produto para dar entrada no stock.</strong></p>
+                        <p><strong>Produto Selecionado: </strong><span id="nomeProdutoSelecionado">Selecione um produto</span></p>
+                        <input type="hidden" name="id_produto" id="id_produto">
                         @endif
 
                          <div class="form-group">
@@ -105,22 +109,64 @@
                 <x-botao-form />
             </form>
             </div>
+           
+
         </div>
     </div>
 </div>
-
+ <!-- Modal para Aumentar Quantidade -->
+<div class="modal fade" id="AumentarStock" tabindex="-1" role="dialog" aria-labelledby="modalAumentarTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="{{ route('stock.store') }}" method="POST">
+                <input type="hidden" name="tipo" value="aumentar">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Aumentar Quantidade no Stock</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Produto:</strong> <span id="nomeProdutoModal"></span></p>
+                    <input type="hidden" name="id" id="stock_id_aumentar">
+                    <div class="form-group">
+                        <label for="qtd_stock_nova">Quantidade a Adicionar</label>
+                        <input type="number" name="qtd_stock" id="qtd_stock_nova" class="form-control" required min="1">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <x-botao-form />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
     function editar(valor) {
         document.getElementById('id').value = valor.id;
         document.getElementById('preco').value = valor.preco;
+        document.getElementById('preco').value = valor.preco;
         document.getElementById('qtd_stock').value = valor.qtd_stock;
         document.getElementById('caducidade').value = valor.caducidade;
+        document.getElementById('id_produto').value = valor.id_produto;
+
+        if (valor.produto) {
+            document.getElementById('nomeProdutoSelecionado').textContent = valor.produto.nome + " / " + valor.produto.descricao + " / " + valor.produto.categoria;
+            document.getElementById('id_produto').value = valor.produto.id;
+        }
     }
     function limpar() {
         document.getElementById('id').value = "";
         document.getElementById('qtd_stock').value = "";
         document.getElementById('caducidade').value = "";
         document.getElementById('preco').value = "";
+        document.getElementById('id_produto').value = "";
+    }
+     function abrirModalAumentar(stockId, nomeProduto) {
+        document.getElementById('stock_id_aumentar').value = stockId;
+        document.getElementById('nomeProdutoModal').textContent = nomeProduto;
+        document.getElementById('qtd_stock_nova').value = '';
     }
 </script>
 @endsection
