@@ -22,7 +22,6 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        
         //
         try {
                 //DEFINIR REGRAS DE VALIDAÇÃO

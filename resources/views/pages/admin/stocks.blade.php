@@ -84,7 +84,6 @@
                         <p><strong>Produto Selecionado: </strong><span id="nomeProdutoSelecionado">Selecione um produto</span></p>
                         <input type="hidden" name="id_produto" id="id_produto">
                         @endif
-
                          <div class="form-group">
                             <label for="preco">Preço</label>
                             <div class="form-input">

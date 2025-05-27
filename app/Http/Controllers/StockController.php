@@ -11,21 +11,19 @@ class StockController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index($id = null)
-{
-    if ($id) {
-        // Buscar um único produto e seus stocks
-        $valor = produto::orderby('nome','desc')->findOrFail($id);
-        $stock = stock::with('produto', 'funcionario')->where('id_produto', $id)->get();
-    } else {
-        // Buscar todos os produtos e todos os stocks
-        $valor = null;
-        $stock = stock::with('produto', 'funcionario')->get();
+   public function index($id = null){
+        if ($id) {
+            // Buscar um único produto e seus stocks
+            $valor = produto::orderby('nome','desc')->findOrFail($id);
+            $stock = stock::with('produto', 'funcionario')->where('id_produto', $id)->get();
+        } else {
+            // Buscar todos os produtos e todos os stocks
+            $valor = null;
+            $stock = stock::with('produto', 'funcionario')->get();
+        }
+
+        return view('pages.admin.stocks', compact('stock', 'valor'));
     }
-
-    return view('pages.admin.stocks', compact('stock', 'valor'));
-}
-
        /**
      * Remove the specified resource from storage.
      */
@@ -56,7 +54,7 @@ class StockController extends Controller
             if (!$valor) {
                 return redirect()->route('stock.index')->with("ERRO", "Stock não encontrado.");
             }
-                $valor->id_funcionario = 1; // Você pode trocar por auth()->user()->id
+                $valor->id_funcionario = 1;
                 $valor->id_produto = $request->id_produto;
                 $valor->preco = $request->preco;
                 $valor->qtd_stock = $request->qtd_stock;
