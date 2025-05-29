@@ -11,14 +11,14 @@
                     <a href="#Cadastrar" data-toggle="modal" style="font-size: 20pt"><i class="fa fa-plus-circle"></i></a>
                 </div>
             </div>
-            @if(session('Error'))
+            @if(session('ERRO'))
                     <div class="alert alert-danger">
-                        <p>{{session('Error')}}</p>
+                        <p>{{session('ERRO')}}</p>
                     </div>
                 @endif
-                @if(session('Sucesso'))
+                @if(session('SUCESSO'))
                     <div class="alert alert-success">
-                        <p>{{session('Sucesso')}}</p>
+                        <p>{{session('SUCESSO')}}</p>
                     </div>
                 @endif
             <div class="card-body">

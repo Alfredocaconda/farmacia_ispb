@@ -23,4 +23,9 @@ Route::post('/stock/store',[StockController::class,'store'])->name('stock.store'
 Route::get('/stock/destroy/{id}',[StockController::class,'destroy'])->name('stock.destroy');
 Route::get('/stocks/{id?}', [StockController::class, 'index'])->name('stock.index');
 
-Route::resource('/venda',VendaController::class);
+Route::get('/vendas', [VendaController::class, 'index'])->name('vendas.index');
+Route::post('/vendas/adicionar', [VendaController::class, 'addToCart'])->name('vendas.add');
+Route::get('/vendas/remover/{id}', [VendaController::class, 'removeFromCart'])->name('vendas.remove');
+Route::get('/vendas/limpar', [VendaController::class, 'clearCart'])->name('vendas.clear');
+Route::post('/vendas/finalizar', [VendaController::class, 'checkout'])->name('vendas.checkout');
+Route::get('/vendas/comprovativo/{venda}', [VendaController::class, 'comprovativo'])->name('vendas.comprovativo');

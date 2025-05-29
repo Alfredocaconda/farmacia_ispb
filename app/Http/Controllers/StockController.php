@@ -124,5 +124,6 @@ class StockController extends Controller
         return redirect()->back()->with("SUCESSO","STOCK APAGADO COM SUCESSO");
     }
    
+        
     
 }
