@@ -24,8 +24,6 @@
 
 </head>
 <body class="  ">
-    <div class="container mt-5">
-        @yield('content')
-    </div>
+    @yield('content')
 </body>
 </html>

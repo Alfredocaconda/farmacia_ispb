@@ -1,31 +1,83 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Livewire\Volt\Volt;
 use App\Http\Controllers\{
     FuncionarioController,
     ProdutoController,
     StockController,
-    VendaController
+    VendaController,
+    FuncionarioAuthController
 };
-Route::get('/', function () {
-    return view('pages.admin.index');
+
+// ===============================
+// ROTAS PÚBLICAS (sem autenticação)
+// ===============================
+
+// Página de login
+Route::get('/', [FuncionarioAuthController::class, 'showLoginForm'])->name('login');
+
+// Processa o login (recebe email e senha)
+Route::post('/login', [FuncionarioAuthController::class, 'login'])->name('login.attempt');
+
+// Encerra a sessão do usuário logado
+Route::post('/logout', [FuncionarioAuthController::class, 'logout'])->name('logout');
+
+// =======================================
+// ROTAS PRIVADAS (somente usuários logados)
+// =======================================
+Route::middleware(['auth'])->group(function () {
+
+    // ================= FUNCIONÁRIO =================
+
+    // CRUD automático (index, create, store, show, edit, update, destroy)
+    Route::resource('/funcionario', FuncionarioController::class);
+
+    // Rota personalizada para armazenar um novo funcionário
+    Route::post('/funcionario/store', [FuncionarioController::class,'store'])->name('funcionario.store');
+
+    // Rota para excluir um funcionário pelo ID
+    Route::get('/funcionario/destroy/{id}', [FuncionarioController::class,'destroy'])->name('funcionario.destroy');
+
+    // ================= PRODUTO =================
+
+    // CRUD automático de produtos
+    Route::resource('/produto', ProdutoController::class);
+
+    // Armazena um novo produto
+    Route::post('/produto/store', [ProdutoController::class,'store'])->name('produto.store');
+
+    // Remove um produto pelo ID
+    Route::get('/produto/destroy/{id}', [ProdutoController::class,'destroy'])->name('produto.destroy');
+
+    // ================= STOCK =================
+
+    // Armazena novo stock
+    Route::post('/stock/store', [StockController::class, 'store'])->name('stock.store');
+
+    // Remove um item de stock
+    Route::get('/stock/destroy/{id}', [StockController::class, 'destroy'])->name('stock.destroy');
+
+    // Lista o stock ou um stock específico (opcional: id)
+    Route::get('/stocks/{id?}', [StockController::class, 'index'])->name('stock.index');
+
+    // ================= VENDAS =================
+
+    // Página principal de vendas
+    Route::get('/vendas', [VendaController::class, 'index'])->name('vendas.index');
+
+    // Adiciona item ao carrinho
+    Route::post('/vendas/adicionar', [VendaController::class, 'addToCart'])->name('vendas.add');
+
+    // Remove item do carrinho
+    Route::get('/vendas/remover/{id}', [VendaController::class, 'removeFromCart'])->name('vendas.remove');
+
+    // Limpa o carrinho
+    Route::get('/vendas/limpar', [VendaController::class, 'clearCart'])->name('vendas.clear');
+
+    // Finaliza a venda
+    Route::post('/vendas/finalizar', [VendaController::class, 'checkout'])->name('vendas.checkout');
+
+    // Gera comprovativo da venda
+    Route::get('/vendas/comprovativo/{venda}', [VendaController::class, 'comprovativo'])->name('vendas.comprovativo');
 });
-Route::resource('/funcionario', FuncionarioController::class,);
-Route::post('/funcionario/store', [FuncionarioController::class,'store'])->name('funcionario.store');
-Route::get('/funcionario/destroy/{id}',[FuncionarioController::class,'destroy'])->name('funcionario.destroy');
-
-Route::resource('/produto',ProdutoController::class);
-Route::post('/produto/store',[ProdutoController::class,'store'])->name('produto.store');
-Route::get('/produto/destroy/{id}',[ProdutoController::class,'destroy'])->name('produto.destroy');
-
-Route::post('/stock/store',[StockController::class,'store'])->name('stock.store');
-Route::get('/stock/destroy/{id}',[StockController::class,'destroy'])->name('stock.destroy');
-Route::get('/stocks/{id?}', [StockController::class, 'index'])->name('stock.index');
-
-Route::get('/vendas', [VendaController::class, 'index'])->name('vendas.index');
-Route::post('/vendas/adicionar', [VendaController::class, 'addToCart'])->name('vendas.add');
-Route::get('/vendas/remover/{id}', [VendaController::class, 'removeFromCart'])->name('vendas.remove');
-Route::get('/vendas/limpar', [VendaController::class, 'clearCart'])->name('vendas.clear');
-Route::post('/vendas/finalizar', [VendaController::class, 'checkout'])->name('vendas.checkout');
-Route::get('/vendas/comprovativo/{venda}', [VendaController::class, 'comprovativo'])->name('vendas.comprovativo');

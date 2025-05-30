@@ -1,8 +1,22 @@
-@extends('layouts.app2')
+@extends('layouts.base')
 @section('title', 'VENDAS')
 @section('content')
-<div class="container mt-4">
-    <h4 class="mb-4">FARMÁCIA XXXXXXXXXX</h4>
+<div class="container-fluid mt-4">
+    {{-- BARRA DE NAVEGAÇÃO --}}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        {{-- Logotipo + Nome da Farmácia --}}
+        <div class="d-flex align-items-center">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo da Farmácia" style="height: 50px; margin-right: 10px;">
+            <h3 class="mb-0">FARMÁCIA 5 DE SETEMBRO</h3>
+        </div>
+        <div class="text-end">
+            <div><strong>Funcionário:</strong> </div>
+            <form action="" method="POST" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-outline-danger btn-sm mt-1">Sair</button>
+            </form>
+        </div>
+    </div>
 
     {{-- Mensagem de Sucesso --}}
     @if (session('SUCESSO'))
@@ -19,9 +33,19 @@
     @endif
 
     <div class="row">
+
         <!-- Produtos -->
         <div class="col-md-8">
-            <h4>Produtos em Estoque</h4>
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-6">
+                    <form method="GET" action="{{ route('vendas.index') }}">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Pesquisar produto..." value="{{ request('search') }}">
+                            <button type="submit" class="btn btn-primary">Pesquisar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div class="tabela-rolavel">
                 <table class="table table-bordered table-striped">
                     <thead class="table-light">

@@ -10,10 +10,21 @@ use Illuminate\Support\Str;
 
 class VendaController extends Controller
 {
-    public function index()
+   public function index(Request $request)
     {
-        $stocks = Stock::with('produto')->where('qtd_stock', '>', 0)->get();
+        $search = $request->input('search');
+
+        $stocks = Stock::with('produto')
+            ->where('qtd_stock', '>', 0)
+            ->when($search, function ($query, $search) {
+                return $query->whereHas('produto', function ($q) use ($search) {
+                    $q->where('nome', 'like', '%' . $search . '%');
+                });
+            })
+            ->get();
+
         $cart = Session::get('cart', []);
+
         return view('pages.venda', compact('stocks', 'cart'));
     }
 

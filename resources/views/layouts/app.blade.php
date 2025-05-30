@@ -89,8 +89,9 @@
 
               <div class="p-3"></div>
           </div>
-          </div>      <div class="iq-top-navbar">
-          <div class="iq-navbar-custom">
+          </div>     
+           <div class="iq-top-navbar">
+            <div class="iq-navbar-custom">
               <nav class="navbar navbar-expand-lg navbar-light p-0">
                   <div class="iq-navbar-logo d-flex align-items-center justify-content-between">
                       <i class="ri-menu-line wrapper-menu"></i>
