@@ -26,7 +26,7 @@ Route::middleware(['auth:funcionario'])->group(function () {
 
     // Dashboard do gerente
     Route::get('/dashboard', function () {
-        return view('pages.admin.home');
+        return view('pages.admin.index');
     })->name('dashboard');
 
     // ================= FUNCIONÁRIO =================

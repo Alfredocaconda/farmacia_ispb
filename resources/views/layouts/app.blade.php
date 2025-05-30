@@ -25,7 +25,7 @@
       <!-- Menu da aplicação -->
       <div class="iq-sidebar  sidebar-default ">
           <div class="iq-sidebar-logo d-flex align-items-center justify-content-between">
-              <a href="{{ url('Dashboard') }}" class="header-logo">
+              <a href="{{url('/dashboard')}}" class="header-logo">
                   <img src="{{asset('imagem/logotipo.jpeg')}}" class="img-fluid rounded-normal light-logo" alt="logo"><h5 class="logo-title light-logo ml-3">FARMÁCIA</h5>
               </a>
               <div class="iq-menu-bt-sidebar ml-0">
@@ -37,7 +37,7 @@
                   <ul id="iq-sidebar-toggle" class="iq-menu">
                    
                     <li class="active">
-                        <a href="" class="svg-icon">
+                        <a href="{{url('/dashboard')}}" class="svg-icon">
                             <svg  class="svg-icon" id="p-dash1" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line>
                             </svg>
@@ -145,11 +145,8 @@
                                                       class="rounded profile-img img-fluid avatar-70">
                                               </div>
                                               <div class="p-3">
-                                                <h5 class="mb-1"></h5>
-                                                
-                                                  <p class="mb-0"></p>
-                                             
-                                                <p class="mb-0"></p>
+                                                    <h5 class="mb-1">{{Auth::guard('funcionario')->user()->nome}}</h5>
+                                                    <p class="mb-0">{{Auth::guard('funcionario')->user()->funcao }}</p>
                                                
                                                   <div class="d-flex align-items-center justify-content-center mt-3">
                                                       <a href="" class="btn border mr-2">Perfil</a>
@@ -158,7 +155,7 @@
                                                                     document.getElementById('logout-form').submit();">
                                                        {{ __('Sair') }}
                                                    </a>
-                                                   <form id="logout-form" action="" method="POST" class="d-none">
+                                                   <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                                        @csrf
                                                    </form>
                                                   </div>
@@ -217,7 +214,7 @@
                             </ul>
                         </div>
                         <div class="col-lg-6 text-right">
-                            <span class="mr-1"><script>document.write(new Date().getFullYear())</script>©</span> <a href="#" class="">ISPIL-BENGUELA</a>.
+                            <span class="mr-1"><script>document.write(new Date().getFullYear())</script>©</span> <a href="#" class="">FARMÁCIA 4 DE SETEMBRO</a>.
                         </div>
                     </div>
                 </div>
