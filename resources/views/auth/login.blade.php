@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>Login - S. Secretaria</title>
+      <title>Login - Farmácia</title>
       
       <!-- Favicon -->
       <link rel="shortcut icon" href="{{asset('images/favicon.ico')}}" />
@@ -20,8 +20,6 @@
         }
       </style>
   <body class="  ">
-    <!-- loader Start -->
-    
     <div class="wrapper" >
         <section class="login-content">
            <div class="container">
@@ -33,19 +31,27 @@
                              <div class="col-lg-7 align-self-center">
                                 <div class="p-3">
                                    <h2 class="mb-2">Login</h2>
-                                   <form action="{{route('login')}}" method="post">
+                                   <form action="{{ route('funcionario.login') }}" method="post">
                                     @csrf
                                       <div class="row">
                                          <div class="col-lg-12">
                                             <div class="floating-label form-group">
-                                               <input class="floating-input form-control" type="text" name="email" placeholder=" ">
-                                               <label>E-mail</label>
+                                               <input class="floating-input form-control" type="text" 
+                                               name="email" placeholder=" "
+                                               value="{{ old('email') }}" required autofocus>
+                                                 @error('email')
+                                                      <div style="color: red;">{{ $message }}</div>
+                                                @enderror
+                                             <label>E-mail</label>
                                             </div>
                                          </div>
                                          <div class="col-lg-12">
                                             <div class="floating-label form-group">
-                                               <input class="floating-input form-control" name="password" type="password" placeholder=" ">
+                                               <input class="floating-input form-control" name="senha" type="password" placeholder=" ">
                                                <label>Senha</label>
+                                                @error('senha')
+                                                      <div style="color: red;">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                          </div>
                                       </div>

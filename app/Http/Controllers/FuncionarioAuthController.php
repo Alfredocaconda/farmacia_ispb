@@ -1,67 +1,66 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Funcionario;
 
 class FuncionarioAuthController extends Controller
 {
-    /**
-     * Exibe o formulário de login
-     */
     public function showLoginForm()
     {
         return view('auth.login');
     }
-
-    /**
-     * Processa o login do funcionário
-     */
     public function login(Request $request)
     {
-        // Validação do formulário
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+            'email' => ['required', 'email'],
+            'senha' => ['required']
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $email = $request->input('email');
+        $senha = $request->input('senha');
 
-        // Verifica credenciais
-        if (Auth::attempt($credentials)) {
-            $user = Auth::funcionario();
+        $user = Funcionario::where('email', $email)->first();
 
-            // Redireciona conforme o tipo de usuário
-            if ($user->funcao === 'farmaceutico') {
-                return redirect()->route('vendas.index');
-            } elseif ($user->tipo === 'gerente') {
-                return redirect()->route('dashboard'); // Certifica-te que essa rota existe
-            } else {
-                // Tipo desconhecido
-                Auth::logout();
-                return back()->withErrors([
-                    'email' => 'Tipo de usuário não autorizado.',
-                ]);
-            }
+        if (!$user) {
+            return back()->withErrors(['email' => 'Email não encontrado.'])->withInput();
         }
 
-        // Credenciais inválidas
-        return back()->withErrors([
-            'email' => 'Email ou senha inválidos.',
-        ])->withInput();
+        if (!Hash::check($senha, $user->senha)) {
+            return back()->withErrors(['senha' => 'Senha incorreta.'])->withInput();
+        }
+
+        // Faz login manualmente
+        Auth::guard('funcionario')->login($user);
+
+        $request->session()->regenerate();
+
+        if ($user->funcao === 'Farmaceutico') {
+            return redirect()->route('vendas.index');
+        } elseif ($user->funcao === 'Gerente') {
+            return redirect()->route('dashboard');
+        }
+
+        Auth::guard('funcionario')->logout();
+        return back()->withErrors(['email' => 'Usuário não autorizado.'])->withInput();
     }
 
-    /**
-     * Faz logout do sistema
-     */
     public function logout(Request $request)
-    {
-        Auth::logout();
+{
+    $user = Auth::guard('funcionario')->user();
+    $funcao = $user?->funcao;
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    Auth::guard('funcionario')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+    if ($funcao === 'Gerente') {
+        return redirect()->route('dashboard');
     }
+
+    return redirect()->route('funcionario.login'); // ou sua rota de login
+}
 }

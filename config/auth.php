@@ -13,9 +13,10 @@ return [
     |
     */
 
+    // CERTO
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+        'guard' => 'funcionario',
+        'passwords' => 'funcionarios',
     ],
 
     /*
@@ -40,7 +41,13 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'funcionario' => [
+            'driver' => 'session',
+            'provider' => 'funcionarios',
+        ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -59,18 +66,17 @@ return [
     |
     */
 
-    'providers' => [
+   'providers' => [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'funcionarios' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Funcionario::class,
+        ],
     ],
-
     /*
     |--------------------------------------------------------------------------
     | Resetting Passwords

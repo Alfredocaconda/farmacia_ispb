@@ -10,10 +10,12 @@
             <h3 class="mb-0">FARMÁCIA 5 DE SETEMBRO</h3>
         </div>
         <div class="text-end">
-            <div><strong>Funcionário:</strong> </div>
-            <form action="" method="POST" class="d-inline">
+            <div><strong>Funcionário:</strong> {{ Auth::guard('funcionario')->user()->nome ?? 'Desconhecido' }}</div>
+            <div><strong>Função:</strong> {{ Auth::guard('funcionario')->user()->funcao ?? '---' }}</div>
+
+            <form action="{{ route('logout') }}" method="POST" class="d-inline">
                 @csrf
-                <button type="submit" class="btn btn-outline-danger btn-sm mt-1">Sair</button>
+                <button type="submit" class="btn btn-sm btn-danger">Sair</button>
             </form>
         </div>
     </div>

@@ -7,26 +7,27 @@ use App\Http\Controllers\{
     ProdutoController,
     StockController,
     VendaController,
-    FuncionarioAuthController
+    FuncionarioAuthController,
 };
 
 // ===============================
 // ROTAS PÚBLICAS (sem autenticação)
 // ===============================
 
-// Página de login
-Route::get('/', [FuncionarioAuthController::class, 'showLoginForm'])->name('login');
-
-// Processa o login (recebe email e senha)
-Route::post('/login', [FuncionarioAuthController::class, 'login'])->name('login.attempt');
-
-// Encerra a sessão do usuário logado
+Route::get('/login', [FuncionarioAuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [FuncionarioAuthController::class, 'login'])->name('funcionario.login');
 Route::post('/logout', [FuncionarioAuthController::class, 'logout'])->name('logout');
+
 
 // =======================================
 // ROTAS PRIVADAS (somente usuários logados)
 // =======================================
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth:funcionario'])->group(function () {
+
+    // Dashboard do gerente
+    Route::get('/dashboard', function () {
+        return view('pages.admin.home');
+    })->name('dashboard');
 
     // ================= FUNCIONÁRIO =================
 
