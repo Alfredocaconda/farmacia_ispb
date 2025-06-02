@@ -143,6 +143,7 @@ class VendaController extends Controller
     {
         $dataInicio = $request->input('data_inicio');
         $dataFim = $request->input('data_fim');
+        $nomeFuncionario = $request->input('nome_funcionario');
 
         $query = Venda::with(['produto', 'funcionario']);
 
@@ -150,17 +151,19 @@ class VendaController extends Controller
         if ($dataInicio && $dataFim) {
             $query->whereBetween('data_venda', [$dataInicio, $dataFim]);
         }
-
-        // Agrupar por código da venda
-        $vendasAgrupadas = $query->orderBy('data_venda', 'desc')
-            ->get()
-            ->groupBy('codigo_venda');
-
-        // Total geral de todas as vendas
-        $totalGeral = $vendasAgrupadas->flatten()->sum('subtotal');
-
-        return view('pages.admin.relatorio', compact('vendasAgrupadas', 'totalGeral', 'dataInicio', 'dataFim'));
+        if ($nomeFuncionario) {
+        // Filtrar pelas vendas em que o nome do funcionário contém o texto digitado
+        $query->whereHas('funcionario', function ($q) use ($nomeFuncionario) {
+            $q->where('nome', 'like', '%' . $nomeFuncionario . '%');
+        });
     }
 
+        // Agrupar por código da venda
+      $vendas = $query->orderBy('data_venda', 'desc')->get();
+          // Total geral de todas as vendas
+        $totalGeral = $vendas->sum('subtotal');
 
+        return view('pages.admin.relatorio', compact('vendas', 'totalGeral', 'dataInicio', 'dataFim', 'nomeFuncionario'));
+
+    }
 }

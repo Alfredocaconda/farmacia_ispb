@@ -13,22 +13,25 @@
                 <input type="date" name="data_fim" class="form-control" value="{{ request('data_fim') }}">
             </div>
             <div class="col">
+                <input type="text" name="nome_funcionario" class="form-control" placeholder="Nome do Funcionário" value="{{ request('nome_funcionario') }}">
+            </div>
+            <div class="col">
                 <button type="submit" class="btn btn-primary">Filtrar</button>
             </div>
         </div>
     </form>
 
-    @foreach($vendasAgrupadas as $codigo => $vendas)
         <div class="card mb-3">
             <div class="card-header">
-                <strong>Código da Venda:</strong> {{ $codigo }} |
                 <strong>Data:</strong> {{ \Carbon\Carbon::parse($vendas->first()->data_venda)->format('d/m/Y H:i') }} |
                 <strong>Funcionário:</strong> {{ $vendas->first()->funcionario->nome ?? 'Funcionário não encontrado' }}
             </div>
             <div class="card-body p-0">
-                <table class="table table-sm table-striped mb-0">
+                <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <th>Data da Venda</th>
+                            <th>Funcionário</th>
                             <th>Produto</th>
                             <th>Quantidade</th>
                             <th>Preço Unitário</th>
@@ -36,28 +39,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($vendas as $venda)
+                        @forelse($vendas as $venda)
                             <tr>
+                                <td>{{ \Carbon\Carbon::parse($venda->data_venda)->format('d/m/Y H:i') }}</td>
+                                <td>{{ $venda->funcionario->nome ?? 'Funcionário não encontrado' }}</td>
                                 <td>{{ $venda->produto->nome ?? 'Produto não encontrado' }}</td>
                                 <td>{{ $venda->quantidade }}</td>
                                 <td>{{ number_format($venda->preco_unitario, 2, ',', '.') }}</td>
                                 <td>{{ number_format($venda->subtotal, 2, ',', '.') }}</td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">Nenhuma venda encontrada.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="3"><strong>Total da Venda:</strong></td>
-                            <td><strong>{{ number_format($vendas->sum('subtotal'), 2, ',', '.') }}</strong></td>
+                            <td colspan="5" class="text-end"><strong>Total Geral:</strong></td>
+                            <td><strong>{{ number_format($totalGeral, 2, ',', '.') }}</strong></td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
-    @endforeach
-
-    <div class="alert alert-success">
-        <strong>Total Geral:</strong> {{ number_format($totalGeral, 2, ',', '.') }}
-    </div>
 </div>
 @endsection
