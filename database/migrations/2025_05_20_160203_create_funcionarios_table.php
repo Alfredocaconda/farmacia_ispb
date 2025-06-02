@@ -23,6 +23,16 @@ return new class extends Migration
             $table->string('endereco');
             $table->timestamps();
         });
+         App\Models\Funcionario::create([
+            'nome'=>'Administrador',
+            'email' => 'geral@gmail.com',
+            'funcao' => 'Gerente',
+            'telefone'=>'935460590',
+            'endereco'=>'BENGUELA',
+            'data_contrato'=>'2025-06-01',
+            'n_bilhete'=>'0000000000BA000',
+            'senha' => bCrypt('123Admin')
+        ]);
     }
 
     /**
@@ -32,4 +42,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('funcionarios');
     }
+    
 };

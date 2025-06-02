@@ -20,8 +20,7 @@ Route::post('/logout', [FuncionarioAuthController::class, 'logout'])->name('logo
 // =======================================
 // ROTAS PRIVADAS (somente usuários logados)
 // =======================================
-Route::middleware(['auth:funcionario'])->group(function () {
-
+Route::group(['middleware'=>'auth'],function(){
     // Dashboard do gerente
     Route::get('/dashboard', function () {
         return view('pages.admin.index');
@@ -83,3 +82,4 @@ Route::middleware(['auth:funcionario'])->group(function () {
     Route::get('/vendas/relatorio', [VendaController::class, 'relatorio'])->name('vendas.relatorio');
 
 });
+//Auth::routes();

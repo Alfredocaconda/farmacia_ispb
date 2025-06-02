@@ -11,11 +11,11 @@ class Funcionario extends Authenticatable
 
     // seus atributos e métodos aqui
     protected $fillable = [
-        'name',
+        'nome',
         'email',
         'telefone',
         'endereco',
-        'data_entrada',
+        'data_contrato',
         'n_bilhete',
         'funcao',
         'senha'

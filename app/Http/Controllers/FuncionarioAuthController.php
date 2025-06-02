@@ -48,7 +48,7 @@ class FuncionarioAuthController extends Controller
         return back()->withErrors(['email' => 'Usuário não autorizado.'])->withInput();
     }
 
-  public function logout(Request $request)
+    public function logout(Request $request)
     {
         // Salvar a função antes do logout
         $funcao = Auth::guard('funcionario')->user()?->funcao;

@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->double('preco');
-            $table->string('qtd_stock');
+            $table->int('qtd_stock');
             $table->string('caducidade');
-            $table->string('data_entrada');
+            $table->date('data_entrada');
             $table->foreignId('id_funcionario')->constrained('funcionarios')->onDelete('cascade');
             $table->foreignId('id_produto')->constrained('produtos')->onDelete('cascade');
-            $table->timestamps();
+            $table->timestamps(); 
         });
     }
 

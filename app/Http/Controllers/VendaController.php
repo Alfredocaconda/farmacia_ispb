@@ -108,7 +108,7 @@ class VendaController extends Controller
                 $venda->preco_unitario = $item['preco'];
                 $venda->subtotal = $subtotal;
                 $venda->data_venda = now();
-                //$venda->user_id = auth()->id(); // se tiver controle de usuário
+                $venda->user_id = auth()->id(); // se tiver controle de usuário
                 $venda->save();
 
                 // Atualiza o estoque

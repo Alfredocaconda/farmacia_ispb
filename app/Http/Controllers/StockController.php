@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\stock;
 use App\Models\produto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StockController extends Controller
 {
@@ -54,7 +55,7 @@ class StockController extends Controller
             if (!$valor) {
                 return redirect()->route('stock.index')->with("ERRO", "Stock não encontrado.");
             }
-                $valor->id_funcionario = 1;
+                $valor->id_funcionario = Auth::funcionario();
                 $valor->id_produto = $request->id_produto;
                 $valor->preco = $request->preco;
                 $valor->qtd_stock = $request->qtd_stock;
@@ -73,14 +74,14 @@ class StockController extends Controller
                     $valor->preco = $request->preco;
                     $valor->caducidade = $request->caducidade;
                     $valor->data_entrada = now();
-                    $valor->id_funcionario = 1;
+                    $valor->id_funcionario = Auth::funcionario();
                     $valor->save();
 
                     return redirect()->route('stock.index')->with("SUCESSO", "QUANTIDADE ATUALIZADA NO STOCK");
                 } else {
                     // Produto novo no stock
                     $valor = new Stock();
-                    $valor->id_funcionario = 1;
+                    $valor->id_funcionario = Auth::funcionario();
                     $valor->id_produto = $request->id_produto;
                     $valor->preco = $request->preco;
                     $valor->qtd_stock = $request->qtd_stock;

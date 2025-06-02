@@ -41,11 +41,11 @@
                     <table id="datatable" class="table data-tables table-striped">
                     <thead>
                         <tr class="ligth">
-                            <th>Nome</th>
-                            <th>Descrição</th>
-                            <th>Categoria</th>
-                            <th>Funcionario</th>
-                            <th></th>
+                            <th>NOME DO PRODUTO</th>
+                            <th>DESCRIÇÃO</th>
+                            <th>CATEGÓRIA</th>
+                            <th>FUNCIONÁRIO</th>
+                            <th>OPÇÕES</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,9 +89,9 @@
                         @csrf
                         <input type="hidden" name="id" id="id">
                         <div class="row">
-                            <x-input-normal id="nome" name="nome" type="text" titulo="Nome Completo" alert="" />
-                            <x-input-normal id="descricao" name="descricao" type="text" titulo="Descrição" alert="" />
-                            <x-input-normal id="categoria" name="categoria" type="text" titulo="Categoria" alert="" />
+                            <x-input-normal id="nome" name="nome" type="text" titulo="NOME DO PRODUTO" alert="" />
+                            <x-input-normal id="descricao" name="descricao" type="text" titulo="DESCRIÇÃO" alert="" />
+                            <x-input-normal id="categoria" name="categoria" type="text" titulo="CATEGÓRIA" alert="" />
                         </div>
                         <div class="modal-footer">
                             <x-botao-form />

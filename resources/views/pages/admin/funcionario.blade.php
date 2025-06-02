@@ -28,9 +28,9 @@
                         <tr class="ligth">
                             <th>NOME COMPLETO</th>
                             <th>Nº BILHETE</th>
-                            <th>FUNCÇÃO</th>
+                            <th>FUNÇÃO</th>
                             <th>TELEFONE</th>
-                            <th>DATA</th>
+                            <th>DATA CONTRATO</th>
                             <th>ENDEREÇO</th>
                             <th>E-mail</th>
                             <th>SENHA</th>

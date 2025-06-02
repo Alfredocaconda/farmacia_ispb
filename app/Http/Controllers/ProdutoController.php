@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\produto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProdutoController extends Controller
 {
@@ -58,7 +59,7 @@ class ProdutoController extends Controller
             $valor->nome=$request->nome;
             $valor->descricao=$request->descricao;
             $valor->categoria=$request->categoria;
-            $valor->id_funcionario=1;
+            $valor->id_funcionario= Auth::guard('funcionario');
             $valor->save();
             return redirect()->back()->with("SUCESSO",$request->filled('id') ? "PRODUTO ACTUALIZADO COM SUCESSO" : "PRODUTO CADASTRADO COM SUCESSO");
 

@@ -76,7 +76,7 @@
                 <div class="container-fluid">
                    <form action="{{route('stock.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
-                         <input type="hidden" name="id" id="id">
+                         <input type="text" name="id" id="id" >
                          <input type="hidden" name="id_produto" id="id_produto" value="{{ $valor->id ?? '' }}">
                        @if($valor)
                             <p><strong>Nome do Produto : </strong>{{ $valor->nome }}</p>

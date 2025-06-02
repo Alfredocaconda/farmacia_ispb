@@ -23,7 +23,6 @@
 
         <div class="card mb-3">
             <div class="card-header">
-                <strong>Data:</strong> {{ \Carbon\Carbon::parse($vendas->first()->data_venda)->format('d/m/Y H:i') }} |
                 <strong>Funcionário:</strong> {{ $vendas->first()->funcionario->nome ?? 'Funcionário não encontrado' }}
             </div>
             <div class="card-body p-0">
@@ -41,7 +40,7 @@
                     <tbody>
                         @forelse($vendas as $venda)
                             <tr>
-                                <td>{{ \Carbon\Carbon::parse($venda->data_venda)->format('d/m/Y H:i') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($venda->data_venda) }}</td>
                                 <td>{{ $venda->funcionario->nome ?? 'Funcionário não encontrado' }}</td>
                                 <td>{{ $venda->produto->nome ?? 'Produto não encontrado' }}</td>
                                 <td>{{ $venda->quantidade }}</td>

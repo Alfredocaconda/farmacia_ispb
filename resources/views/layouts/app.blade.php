@@ -145,9 +145,12 @@
                                                       class="rounded profile-img img-fluid avatar-70">
                                               </div>
                                               <div class="p-3">
-                                                    <h5 class="mb-1">{{Auth::guard('funcionario')->user()->nome}}</h5>
-                                                    <p class="mb-0">{{Auth::guard('funcionario')->user()->funcao }}</p>
-                                               
+                                                     <h5 class="mb-1">{{Auth::funcionario()->nome}}</h5>
+                                                  @if(Auth::funcionario()->funcao == "Gerente")
+                                                    <p class="mb-0">{{Auth::funcionario()->tipo}}</p>
+                                                  @else
+                                                    <p class="mb-0">{{Auth::funcionario()->funcao}}</p>
+                                                  @endif
                                                   <div class="d-flex align-items-center justify-content-center mt-3">
                                                       <a href="" class="btn border mr-2">Perfil</a>
                                                       <a class="btn border" href="{{route('logout')}}">
