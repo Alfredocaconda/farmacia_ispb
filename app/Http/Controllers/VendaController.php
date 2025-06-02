@@ -138,4 +138,29 @@ class VendaController extends Controller
 
         return view('pages.comprovativo', compact('vendas', 'codigo_venda'));
     }
+
+    public function relatorio(Request $request)
+    {
+        $dataInicio = $request->input('data_inicio');
+        $dataFim = $request->input('data_fim');
+
+        $query = Venda::with(['produto', 'funcionario']);
+
+
+        if ($dataInicio && $dataFim) {
+            $query->whereBetween('data_venda', [$dataInicio, $dataFim]);
+        }
+
+        // Agrupar por código da venda
+        $vendasAgrupadas = $query->orderBy('data_venda', 'desc')
+            ->get()
+            ->groupBy('codigo_venda');
+
+        // Total geral de todas as vendas
+        $totalGeral = $vendasAgrupadas->flatten()->sum('subtotal');
+
+        return view('pages.admin.relatorio', compact('vendasAgrupadas', 'totalGeral', 'dataInicio', 'dataFim'));
+    }
+
+
 }

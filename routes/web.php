@@ -13,11 +13,9 @@ use App\Http\Controllers\{
 // ===============================
 // ROTAS PÚBLICAS (sem autenticação)
 // ===============================
-
-Route::get('/login', [FuncionarioAuthController::class, 'showLoginForm'])->name('login');
+Route::get('/', [FuncionarioAuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [FuncionarioAuthController::class, 'login'])->name('funcionario.login');
 Route::post('/logout', [FuncionarioAuthController::class, 'logout'])->name('logout');
-
 
 // =======================================
 // ROTAS PRIVADAS (somente usuários logados)
@@ -81,4 +79,7 @@ Route::middleware(['auth:funcionario'])->group(function () {
 
     // Gera comprovativo da venda
     Route::get('/vendas/comprovativo/{venda}', [VendaController::class, 'comprovativo'])->name('vendas.comprovativo');
+
+    Route::get('/vendas/relatorio', [VendaController::class, 'relatorio'])->name('vendas.relatorio');
+
 });

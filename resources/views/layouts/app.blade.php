@@ -64,7 +64,7 @@
                           </a>
                       </li>
                       <li class=" ">
-                        <a href="" class="svg-icon">
+                        <a href="{{route('vendas.relatorio')}}" class="svg-icon">
                             <i class="fa fa-list-alt"></i>
                               <span class="ml-4">RELATÓRIOS</span>
                           </a>
@@ -150,9 +150,7 @@
                                                
                                                   <div class="d-flex align-items-center justify-content-center mt-3">
                                                       <a href="" class="btn border mr-2">Perfil</a>
-                                                      <a class="btn border" href=""
-                                                      onclick="event.preventDefault();
-                                                                    document.getElementById('logout-form').submit();">
+                                                      <a class="btn border" href="{{route('logout')}}">
                                                        {{ __('Sair') }}
                                                    </a>
                                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -199,6 +197,7 @@
        @yield('produto')
        @yield('stock')
        @yield('perfil')
+       @yield('content')
     </div>
     </div>
     <!-- Wrapper End-->

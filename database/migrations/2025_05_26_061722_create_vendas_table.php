@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('subtotal', 10, 2); // preco_unitario * quantidade
             $table->timestamp('data_venda'); // data da venda
             $table->string('codigo_venda'); // Ex: "VND-0001"
+            $table->foreignId('funcionario_id')->constrained('funcionarios');
             $table->timestamps();
         });
     }

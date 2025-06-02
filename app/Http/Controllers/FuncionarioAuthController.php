@@ -48,19 +48,21 @@ class FuncionarioAuthController extends Controller
         return back()->withErrors(['email' => 'Usuário não autorizado.'])->withInput();
     }
 
-    public function logout(Request $request)
-{
-    $user = Auth::guard('funcionario')->user();
-    $funcao = $user?->funcao;
+  public function logout(Request $request)
+    {
+        // Salvar a função antes do logout
+        $funcao = Auth::guard('funcionario')->user()?->funcao;
 
-    Auth::guard('funcionario')->logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+        Auth::guard('funcionario')->logout();
 
-    if ($funcao === 'Gerente') {
-        return redirect()->route('dashboard');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // Agora você ainda consegue usar $funcao
+        if ($funcao === 'Gerente') {
+            return redirect()->route('dashboard'); // redireciona para dashboard
+        }
+
+        return redirect()->route('login'); // redireciona para login
     }
-
-    return redirect()->route('funcionario.login'); // ou sua rota de login
-}
 }

@@ -12,11 +12,18 @@
         <div class="text-end">
             <div><strong>Funcionário:</strong> {{ Auth::guard('funcionario')->user()->nome ?? 'Desconhecido' }}</div>
             <div><strong>Função:</strong> {{ Auth::guard('funcionario')->user()->funcao ?? '---' }}</div>
+            @php
+                $funcao = Auth::guard('funcionario')->user()->funcao ?? null;
+            @endphp
 
-            <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                @csrf
-                <button type="submit" class="btn btn-sm btn-danger">Sair</button>
-            </form>
+            @if ($funcao === 'Gerente')
+                <a href="{{ route('dashboard') }}" class="btn btn-sm btn-danger">SAIR</a>
+            @else
+                <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-danger">SAIR</button>
+                </form>
+            @endif
         </div>
     </div>
 
