@@ -59,7 +59,7 @@ class ProdutoController extends Controller
             $valor->nome=$request->nome;
             $valor->descricao=$request->descricao;
             $valor->categoria=$request->categoria;
-            $valor->id_funcionario= Auth::guard('funcionario');
+            $valor->id_funcionario = Auth::guard('funcionario')->user()->id;
             $valor->save();
             return redirect()->back()->with("SUCESSO",$request->filled('id') ? "PRODUTO ACTUALIZADO COM SUCESSO" : "PRODUTO CADASTRADO COM SUCESSO");
 

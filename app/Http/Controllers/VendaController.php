@@ -108,7 +108,7 @@ class VendaController extends Controller
                 $venda->preco_unitario = $item['preco'];
                 $venda->subtotal = $subtotal;
                 $venda->data_venda = now();
-                $venda->user_id = auth()->id(); // se tiver controle de usuário
+                $venda->funcionario_id=$request->id_funcionario;// se tiver controle de usuário
                 $venda->save();
 
                 // Atualiza o estoque
@@ -143,27 +143,36 @@ class VendaController extends Controller
     {
         $dataInicio = $request->input('data_inicio');
         $dataFim = $request->input('data_fim');
-        $nomeFuncionario = $request->input('nome_funcionario');
+        $pesquisa = $request->input('pesquisa');
 
-        $query = Venda::with(['produto', 'funcionario']);
+        // Se nada for inserido, retorna uma coleção vazia
+        if (!$dataInicio && !$dataFim && !$pesquisa) {
+            $vendas = collect();
+            $totalGeral = 0;
+        } else {
+            $query = Venda::with(['produto', 'funcionario']);
 
+            // Filtro por data (sem hora)
+            if ($dataInicio && $dataFim) {
+                $query->whereBetween('data_venda', [$dataInicio, $dataFim]);
+            }
 
-        if ($dataInicio && $dataFim) {
-            $query->whereBetween('data_venda', [$dataInicio, $dataFim]);
+            // Se houver texto pesquisado (produto ou funcionário)
+            if ($pesquisa) {
+                $query->where(function ($q) use ($pesquisa) {
+                    $q->whereHas('funcionario', function ($q2) use ($pesquisa) {
+                        $q2->where('nome', 'like', '%' . $pesquisa . '%');
+                    })->orWhereHas('produto', function ($q3) use ($pesquisa) {
+                        $q3->where('nome', 'like', '%' . $pesquisa . '%');
+                    });
+                });
+            }
+
+            $vendas = $query->orderBy('data_venda', 'desc')->get();
+            $totalGeral = $vendas->sum('subtotal');
         }
-        if ($nomeFuncionario) {
-        // Filtrar pelas vendas em que o nome do funcionário contém o texto digitado
-        $query->whereHas('funcionario', function ($q) use ($nomeFuncionario) {
-            $q->where('nome', 'like', '%' . $nomeFuncionario . '%');
-        });
+
+        return view('pages.admin.relatorio', compact('vendas', 'totalGeral', 'dataInicio', 'dataFim', 'pesquisa'));
     }
 
-        // Agrupar por código da venda
-      $vendas = $query->orderBy('data_venda', 'desc')->get();
-          // Total geral de todas as vendas
-        $totalGeral = $vendas->sum('subtotal');
-
-        return view('pages.admin.relatorio', compact('vendas', 'totalGeral', 'dataInicio', 'dataFim', 'nomeFuncionario'));
-
-    }
 }

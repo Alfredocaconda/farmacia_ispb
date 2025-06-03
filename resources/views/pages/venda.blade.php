@@ -128,6 +128,7 @@
                 <p><strong>Total Geral:</strong> {{ number_format($total, 2) }} Kz</p>
                 <form action="{{ route('vendas.checkout') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="id_funcionario" value="{{Auth::guard('funcionario')->user()->id}}">
                     <div class="mb-2">
                         <label for="valor_entregue" class="form-label">Valor entregue pelo cliente</label>
                         <input type="number" name="valor_entregue" id="valor_entregue" class="form-control" step="0.01" min="{{ $total }}" required>
