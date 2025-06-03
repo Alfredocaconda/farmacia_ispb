@@ -77,6 +77,7 @@ Route::group(['middleware'=>'auth'],function(){
     Route::post('/vendas/finalizar', [VendaController::class, 'checkout'])->name('vendas.checkout');
 
     Route::get('/vendas/relatorio', [VendaController::class, 'relatorio'])->name('vendas.relatorio');
+    Route::get('/vendas/imprimir/{codigo_fatura}', [VendaController::class, 'imprimir'])->name('vendas.imprimir');
 
     Route::get('/vendas/relatorio/pdf', [VendaController::class, 'exportarPDF'])->name('vendas.relatorio.pdf');
 

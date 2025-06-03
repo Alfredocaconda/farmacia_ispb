@@ -17,7 +17,6 @@ class ProdutoController extends Controller
         $valor=produto::orderby('nome','desc','funcionario')->get();
         return view('pages.admin.produto',compact('valor'));
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -71,19 +70,18 @@ class ProdutoController extends Controller
         }
         
     }
-
     /**
      * Display the specified resource.
      */
     public function show($id)
     {
         //
-    $valor=produto::find($id);
-    if (!$valor) {
-        # code...
-        return redirect()->back()->with("ERRO","FUNCIONÁRIO NÃO ENCONTRADO");
-    } 
-    return view('pages.admin.produto',compact('valor'));
+        $valor=produto::find($id);
+        if (!$valor) {
+            # code...
+            return redirect()->back()->with("ERRO","FUNCIONÁRIO NÃO ENCONTRADO");
+        } 
+        return view('pages.admin.produto',compact('valor'));
     }
     /**
      * Remove the specified resource from storage.

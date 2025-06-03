@@ -9,10 +9,16 @@ use App\Models\Funcionario;
 
 class FuncionarioAuthController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function showLoginForm()
     {
         return view('auth.login');
     }
+    /**
+     * Display a listing of the resource.
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -47,7 +53,9 @@ class FuncionarioAuthController extends Controller
         Auth::guard('funcionario')->logout();
         return back()->withErrors(['email' => 'Usuário não autorizado.'])->withInput();
     }
-
+    /**
+     * Display a listing of the resource.
+     */
     public function logout(Request $request)
     {
         // Salvar a função antes do logout

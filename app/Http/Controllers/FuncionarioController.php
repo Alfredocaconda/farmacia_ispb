@@ -10,14 +10,18 @@ use Illuminate\Database\QueryException;
 
 class FuncionarioController extends Controller
 {
-   
+    /**
+     * Display a listing of the resource.
+     */
      // Lista funcionários
     public function index()
     {
         $funcionario = Funcionario::orderBy('nome', 'asc')->get();
         return view('pages.admin.funcionario', compact('funcionario'));
     }
-
+    /**
+     * Display a listing of the resource.
+     */
     // Cria ou atualiza funcionário
     public function store(Request $request)
     {
@@ -64,7 +68,9 @@ class FuncionarioController extends Controller
             return redirect()->back()->with("ERRO", "ERRO AO SALVAR FUNCIONÁRIO. TENTE NOVAMENTE");
         }
     }
-
+    /**
+     * Display a listing of the resource.
+     */
     // Mostra um funcionário
     public function show($id)
     {
@@ -75,7 +81,9 @@ class FuncionarioController extends Controller
 
         return view('pages.admin.funcionario', compact('funcionario'));
     }
-
+    /**
+     * Display a listing of the resource.
+     */
     // Remove um funcionário
     public function destroy($id)
     {

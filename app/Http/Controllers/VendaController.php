@@ -15,6 +15,9 @@ use Illuminate\Support\Collection;
 
 class VendaController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
    public function index(Request $request)
     {
         $search = $request->input('search');
@@ -32,7 +35,10 @@ class VendaController extends Controller
 
         return view('pages.venda', compact('stocks', 'cart'));
     }
-
+    
+    /**
+     * Display a listing of the resource.
+     */
     public function addToCart(Request $request)
     {
         $request->validate([
@@ -63,7 +69,9 @@ class VendaController extends Controller
         Session::put('cart', $cart);
         return back();
     }
-
+    /**
+     * Display a listing of the resource.
+     */
     public function removeFromCart($id)
     {
         $cart = Session::get('cart', []);
@@ -71,13 +79,17 @@ class VendaController extends Controller
         Session::put('cart', $cart);
         return back();
     }
-
+    /**
+     * Display a listing of the resource.
+     */
     public function clearCart()
     {
         Session::forget('cart');
         return back();
     }
-
+    /**
+     * Display a listing of the resource.
+     */
     public function checkout(Request $request)
     {
         $cart = session()->get('cart', []);
@@ -139,13 +151,16 @@ class VendaController extends Controller
 
             session()->forget('cart');
 
-            return redirect()->route('vendas.index');
+            return redirect()->route('vendas.index')->with('codigo_fatura', $codigo_fatura);
+
 
         } catch (\Exception $e) {
             return redirect()->back()->with('ERRO', 'Erro ao finalizar venda: ' . $e->getMessage());
         }
     }
-
+    /**
+     * Display a listing of the resource.
+     */
     public function relatorio(Request $request)
     {
         $dataInicio = $request->input('data_inicio');
@@ -181,7 +196,9 @@ class VendaController extends Controller
 
         return view('pages.admin.relatorio', compact('vendas', 'totalGeral', 'dataInicio', 'dataFim', 'pesquisa'));
     }
-
+    /**
+     * Display a listing of the resource.
+     */
     public function exportarPDF(Request $request)
     {
         $dataInicio = $request->input('data_inicio');
@@ -217,7 +234,9 @@ class VendaController extends Controller
 
         return $pdf->download('relatorio_vendas.pdf');
     }
-
+    /**
+     * Display a listing of the resource.
+     */
     public function devolucao(Request $request)
     {
         $codigo_fatura = $request->input('codigo_fatura');
@@ -232,6 +251,9 @@ class VendaController extends Controller
 
         return view('pages.admin.devolucoes', compact('vendas', 'codigo_fatura'));
     }
+    /**
+     * Display a listing of the resource.
+     */
     public function eliminarVenda(Request $request, $id)
     {
         DB::transaction(function () use ($id) {
@@ -250,5 +272,21 @@ class VendaController extends Controller
         return redirect()->back()->with('success', 'Produto devolvido e removido da venda com sucesso.');
     }
     
+    public function imprimir($codigo_fatura)
+    {
+        $vendas = Venda::where('codigo_fatura', $codigo_fatura)
+            ->with(['produto', 'funcionario'])
+            ->get();
+
+        if ($vendas->isEmpty()) {
+            return redirect()->route('vendas.index')->with('ERRO', 'Venda não encontrada.');
+        }
+
+        // Dados do funcionário (todos os registros têm o mesmo)
+        $funcionario = $vendas->first()->funcionario;
+
+        return view('pages.factura.imprimir', compact('vendas', 'funcionario'));
+    }
+
 
 }

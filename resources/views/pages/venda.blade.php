@@ -2,9 +2,7 @@
 @section('title', 'VENDAS')
 @section('content')
 <div class="container-fluid mt-4">
-    {{-- BARRA DE NAVEGAÇÃO --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
-        {{-- Logotipo + Nome da Farmácia --}}
         <div class="d-flex align-items-center">
             <img src="{{ asset('images/logo.png') }}" alt="Logo da Farmácia" style="height: 50px; margin-right: 10px;">
             <h3 class="mb-0">FARMÁCIA 5 DE SETEMBRO</h3>
@@ -12,10 +10,7 @@
         <div class="text-end">
             <div><strong>Funcionário:</strong> {{ Auth::guard('funcionario')->user()->nome ?? 'Desconhecido' }}</div>
             <div><strong>Função:</strong> {{ Auth::guard('funcionario')->user()->funcao ?? '---' }}</div>
-            @php
-                $funcao = Auth::guard('funcionario')->user()->funcao ?? null;
-            @endphp
-
+            @php $funcao = Auth::guard('funcionario')->user()->funcao ?? null; @endphp
             @if ($funcao === 'Gerente')
                 <a href="{{ route('dashboard') }}" class="btn btn-sm btn-danger">SAIR</a>
             @else
@@ -27,23 +22,14 @@
         </div>
     </div>
 
-    {{-- Mensagem de Sucesso --}}
     @if (session('SUCESSO'))
-        <div class="alert alert-green">
-            {{ session('SUCESSO') }}
-        </div>
+        <div class="alert alert-green">{{ session('SUCESSO') }}</div>
     @endif
-
-    {{-- Mensagem de Erro --}}
     @if (session('ERRO'))
-        <div class="alert alert-danger">
-            {{ session('ERRO') }}
-        </div>
+        <div class="alert alert-danger">{{ session('ERRO') }}</div>
     @endif
 
     <div class="row">
-
-        <!-- Produtos -->
         <div class="col-md-8">
             <div class="row justify-content-center mb-3">
                 <div class="col-md-6">
@@ -58,77 +44,52 @@
             <div class="tabela-rolavel">
                 <table class="table table-bordered table-striped">
                     <thead class="table-light">
-                        <tr>
-                            <th>Produto</th>
-                            <th>Preço</th>
-                            <th>Qtd em Stock</th>
-                            <th>Ação</th>
-                        </tr>
+                        <tr><th>Produto</th><th>Preço</th><th>Qtd em Stock</th><th>Ação</th></tr>
                     </thead>
                     <tbody>
                         @foreach($stocks as $stock)
-                            <tr>
-                                <td>{{ $stock->produto->nome }}</td>
-                                <td>{{ number_format($stock->preco, 2) }} Kz</td>
-                                <td>{{ $stock->qtd_stock }}</td>
-                                <td>
-                                    <button
-                                        class="btn btn-sm btn-primary btn-selecionar"
-                                        data-stock-id="{{ $stock->id }}"
-                                        data-produto-nome="{{ $stock->produto->nome }}"
-                                        data-max-qtd="{{ $stock->qtd_stock }}">
-                                        Selecionar
-                                    </button>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>{{ $stock->produto->nome }}</td>
+                            <td>{{ number_format($stock->preco, 2) }} Kz</td>
+                            <td>{{ $stock->qtd_stock }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary btn-selecionar" data-stock-id="{{ $stock->id }}" data-produto-nome="{{ $stock->produto->nome }}" data-max-qtd="{{ $stock->qtd_stock }}">Selecionar</button>
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Carrinho -->
         <div class="col-md-4">
             <h4>Carrinho</h4>
+            @php $total = 0; @endphp
             @if(empty($cart))
                 <p class="text-muted">Sem produtos no carrinho.</p>
             @else
-                @php
-                    $total = 0;
-                    foreach($cart as $item) {
-                        $subtotal = $item['preco'] * $item['quantidade'];
-                        $total += $subtotal;
-                    }
-                @endphp
+                @php foreach($cart as $item) { $subtotal = $item['preco'] * $item['quantidade']; $total += $subtotal; } @endphp
                 <table class="table table-sm table-bordered">
                     <thead class="table-light">
-                        <tr>
-                            <th>Produto</th>
-                            <th>Qtd</th>
-                            <th>Total</th>
-                            <th></th>
-                        </tr>
+                        <tr><th>Produto</th><th>Qtd</th><th>Total</th><th></th></tr>
                     </thead>
                     <tbody>
                         @foreach($cart as $item)
-                            @php
-                                $subtotal = $item['preco'] * $item['quantidade'];
-                            @endphp
-                            <tr>
-                                <td>{{ $item['nome'] }}</td>
-                                <td>{{ $item['quantidade'] }}</td>
-                                <td>{{ number_format($subtotal, 2) }} Kz</td>
-                                <td>
-                                    <a href="{{ route('vendas.remove', $item['id']) }}" class="btn btn-sm btn-danger">X</a>
-                                </td>
-                            </tr>
+                        @php $subtotal = $item['preco'] * $item['quantidade']; @endphp
+                        <tr>
+                            <td>{{ $item['nome'] }}</td>
+                            <td>{{ $item['quantidade'] }}</td>
+                            <td>{{ number_format($subtotal, 2) }} Kz</td>
+                            <td><a href="{{ route('vendas.remove', $item['id']) }}" class="btn btn-sm btn-danger">X</a></td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
                 <p><strong>Total Geral:</strong> {{ number_format($total, 2) }} Kz</p>
-                <form action="{{ route('vendas.checkout') }}" method="POST">
+                <form id="formFinalizarVenda" action="{{ route('vendas.checkout') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="id_funcionario" value="{{Auth::guard('funcionario')->user()->id}}">
+                    <input type="hidden" name="id_funcionario" value="{{ Auth::guard('funcionario')->user()->id }}">
+                    <input type="hidden" id="campoImprimir" name="imprimir" value="nao">
                     <div class="mb-2">
                         <label for="valor_entregue" class="form-label">Valor entregue pelo cliente</label>
                         <input type="number" name="valor_entregue" id="valor_entregue" class="form-control" step="0.01" min="{{ $total }}" required>
@@ -137,11 +98,10 @@
                         <label for="troco" class="form-label">Troco</label>
                         <input type="text" id="troco" class="form-control bg-light" readonly>
                     </div>
-                    <button class="btn btn-success w-100 mb-2">Finalizar Venda</button>
+                    <button type="button" class="btn btn-success w-100 mb-2" id="btnConfirmarVenda">Finalizar Venda</button>
                 </form>
                 <a href="{{ route('vendas.clear') }}" class="btn btn-secondary w-100">Limpar Carrinho</a>
 
-                {{-- SCRIPT DE TROCO SOMENTE QUANDO CARRINHO EXISTE --}}
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         const valorEntregueInput = document.getElementById('valor_entregue');
@@ -166,20 +126,11 @@
     </div>
 </div>
 
-{{-- MODAL SCRIPT (pode ficar fora do @else) --}}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const modal = document.createElement('div');
         modal.id = 'customModal';
-        modal.style.position = 'fixed';
-        modal.style.top = '0';
-        modal.style.left = '0';
-        modal.style.width = '100%';
-        modal.style.height = '100%';
-        modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-        modal.style.display = 'none';
-        modal.style.justifyContent = 'center';
-        modal.style.alignItems = 'center';
+        modal.style = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center;';
         modal.innerHTML = `
             <div style="background: white; padding: 20px; border-radius: 10px; width: 300px; max-width: 90%;">
                 <h5 id="productName"></h5>
@@ -209,14 +160,40 @@
                 document.getElementById('productName').textContent = "Adicionar: " + nomeProduto;
                 document.getElementById('modalQuantidade').max = maxQtd;
                 document.getElementById('modalQuantidade').value = "";
-
                 modal.style.display = 'flex';
             });
         });
     });
-
     function fecharModal() {
         document.getElementById('customModal').style.display = 'none';
     }
 </script>
+
+<div class="modal" tabindex="-1" id="confirmarImpressaoModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
+    <div style="background: #fff; padding: 20px; border-radius: 10px; width: 400px;">
+        <h5>Deseja imprimir o comprovativo?</h5>
+        <div class="mt-3 d-flex justify-content-end">
+            <button class="btn btn-secondary me-2" onclick="confirmarImpressao(false)">Não</button>
+            <button class="btn btn-primary" onclick="confirmarImpressao(true)">Sim</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('btnConfirmarVenda').addEventListener('click', function () {
+        document.getElementById('confirmarImpressaoModal').style.display = 'flex';
+    });
+
+    function confirmarImpressao(deveImprimir) {
+        document.getElementById('campoImprimir').value = deveImprimir ? 'sim' : 'nao';
+        document.getElementById('confirmarImpressaoModal').style.display = 'none';
+        document.getElementById('formFinalizarVenda').submit();
+    }
+</script>
+
+@if(session('codigo_fatura') && session('imprimir') === 'sim')
+<script>
+    window.open("{{ route('vendas.imprimir', ['codigo_fatura' => session('codigo_fatura')]) }}", '_blank');
+</script>
+@endif
 @endsection

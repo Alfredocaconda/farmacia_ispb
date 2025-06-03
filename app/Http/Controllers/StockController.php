@@ -123,8 +123,5 @@ class StockController extends Controller
         }
         $valor->delete();
         return redirect()->back()->with("SUCESSO","STOCK APAGADO COM SUCESSO");
-    }
-   
-        
-    
+    } 
 }
