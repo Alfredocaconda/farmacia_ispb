@@ -72,7 +72,7 @@
                     
                       <!-- INFORMACAO DA SECRETARIA QUE TERAO ACESSO-->
                       <li class=" ">
-                        <a href="" class="svg-icon">
+                        <a href="{{route('devolucoes.devolucao')}}" class="svg-icon">
                             <i class="fa fa-users"></i>
                               <span class="ml-4">DEVOLUÇÃO</span>
                           </a>

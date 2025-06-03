@@ -17,6 +17,12 @@
                 <div class="col">
                     <button type="submit" class="btn btn-primary">Filtrar</button>
                 </div>
+                <div class="text-end mb-3">
+                    <a href="{{ route('vendas.relatorio.pdf', request()->all()) }}" class="btn btn-danger" target="_blank">
+                        📄 Exportar PDF
+                    </a>
+                </div>
+
             </div>
         </form>
 
@@ -52,7 +58,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">Nenhuma venda encontrada.</td>
+                            <td colspan="6" class="text-center">Nenhuma venda encontrada, Por favor inserir as datas para obter Relatório.</td>
                         </tr>
                     @endforelse
                 </tbody>

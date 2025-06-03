@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('preco_unitario', 10, 2); // preço por unidade
             $table->decimal('subtotal', 10, 2); // preco_unitario * quantidade
             $table->date('data_venda'); // data da venda
-            $table->string('codigo_venda'); // Ex: "VND-0001"
+            $table->string('codigo_fatura');
             $table->foreignId('funcionario_id')->constrained('funcionarios');
             $table->timestamps();
         });

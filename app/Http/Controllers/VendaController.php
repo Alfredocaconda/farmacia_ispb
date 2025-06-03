@@ -7,6 +7,11 @@ use App\Models\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\produto;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class VendaController extends Controller
 {
@@ -73,7 +78,7 @@ class VendaController extends Controller
         return back();
     }
 
-   public function checkout(Request $request)
+    public function checkout(Request $request)
     {
         $cart = session()->get('cart', []);
             if (empty($cart)) {
@@ -93,8 +98,23 @@ class VendaController extends Controller
 
             $troco = $valor_entregue - $total;
 
-            // Gerar um código único para a venda
-            $codigoVenda = 'VENDA-' . strtoupper(uniqid());
+            
+
+            $anoAtual = Carbon::now()->year;
+
+            // Buscar o último código de venda do ano atual
+            $ultimaVenda = DB::table('vendas')
+                ->whereYear('data_venda', $anoAtual)
+                ->orderByDesc('id')
+                ->first();
+
+            if ($ultimaVenda && preg_match('/^' . $anoAtual . '-(\d{4})$/', $ultimaVenda->codigo_fatura, $matches)) {
+                $numeroSequencial = (int) $matches[1] + 1;
+            } else {
+                $numeroSequencial = 1;
+            }
+
+            $codigo_fatura = $anoAtual . '-' . str_pad($numeroSequencial, 4, '0', STR_PAD_LEFT);
 
         try {
             foreach ($cart as $item) {
@@ -102,7 +122,7 @@ class VendaController extends Controller
 
                 // Registra a venda
                 $venda = new Venda();
-                $venda->codigo_venda = $codigoVenda;
+                $venda->codigo_fatura = $codigo_fatura;
                 $venda->produto_id = $item['id']; // ou stock_id, se for o caso
                 $venda->quantidade = $item['quantidade'];
                 $venda->preco_unitario = $item['preco'];
@@ -124,19 +144,6 @@ class VendaController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('ERRO', 'Erro ao finalizar venda: ' . $e->getMessage());
         }
-    }
-
-
-    public function comprovativo($codigo_venda)
-    {
-        // Busca todas as linhas da venda pelo código
-        $vendas = Venda::where('codigo_venda', $codigo_venda)->with('produto')->get();
-
-        if ($vendas->isEmpty()) {
-            return redirect()->route('vendas.index')->with('ERRO', 'Venda não encontrada.');
-        }
-
-        return view('pages.comprovativo', compact('vendas', 'codigo_venda'));
     }
 
     public function relatorio(Request $request)
@@ -174,5 +181,74 @@ class VendaController extends Controller
 
         return view('pages.admin.relatorio', compact('vendas', 'totalGeral', 'dataInicio', 'dataFim', 'pesquisa'));
     }
+
+    public function exportarPDF(Request $request)
+    {
+        $dataInicio = $request->input('data_inicio');
+        $dataFim = $request->input('data_fim');
+        $pesquisa = $request->input('pesquisa');
+
+        if (!$dataInicio && !$dataFim && !$pesquisa) {
+            $vendas = collect();
+            $totalGeral = 0;
+        } else {
+            $query = Venda::with(['produto', 'funcionario']);
+
+            if ($dataInicio && $dataFim) {
+                $query->whereBetween('data_venda', [$dataInicio, $dataFim]);
+            }
+
+            if ($pesquisa) {
+                $query->where(function ($q) use ($pesquisa) {
+                    $q->whereHas('funcionario', function ($q2) use ($pesquisa) {
+                        $q2->where('nome', 'like', '%' . $pesquisa . '%');
+                    })->orWhereHas('produto', function ($q3) use ($pesquisa) {
+                        $q3->where('nome', 'like', '%' . $pesquisa . '%');
+                    });
+                });
+            }
+
+            $vendas = $query->orderBy('data_venda', 'desc')->get();
+            $totalGeral = $vendas->sum('subtotal');
+        }
+
+        $pdf = Pdf::loadView('pages.admin.relatorio_pdf', compact('vendas', 'totalGeral', 'dataInicio', 'dataFim', 'pesquisa'))
+                ->setPaper('A4', 'portrait');
+
+        return $pdf->download('relatorio_vendas.pdf');
+    }
+
+    public function devolucao(Request $request)
+    {
+        $codigo_fatura = $request->input('codigo_fatura');
+        // Retorna uma collection vazia
+        $vendas = collect();
+
+        if ($codigo_fatura) {
+            $vendas = Venda::with(['produto.stock'])
+                        ->where('codigo_fatura', $codigo_fatura)
+                        ->get();
+        }
+
+        return view('pages.admin.devolucoes', compact('vendas', 'codigo_fatura'));
+    }
+    public function eliminarVenda(Request $request, $id)
+    {
+        DB::transaction(function () use ($id) {
+            $venda = Venda::with('produto.stock')->findOrFail($id);
+
+            // Atualiza o stock
+            if ($venda->produto && $venda->produto->stock) {
+                $venda->produto->stock->qtd_stock += $venda->quantidade;
+                $venda->produto->stock->save();
+            }
+
+            // Deleta a venda
+            $venda->delete();
+        });
+
+        return redirect()->back()->with('success', 'Produto devolvido e removido da venda com sucesso.');
+    }
+    
 
 }

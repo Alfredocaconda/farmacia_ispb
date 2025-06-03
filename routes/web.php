@@ -76,10 +76,12 @@ Route::group(['middleware'=>'auth'],function(){
     // Finaliza a venda
     Route::post('/vendas/finalizar', [VendaController::class, 'checkout'])->name('vendas.checkout');
 
-    // Gera comprovativo da venda
-    Route::get('/vendas/comprovativo/{venda}', [VendaController::class, 'comprovativo'])->name('vendas.comprovativo');
-
     Route::get('/vendas/relatorio', [VendaController::class, 'relatorio'])->name('vendas.relatorio');
+
+    Route::get('/vendas/relatorio/pdf', [VendaController::class, 'exportarPDF'])->name('vendas.relatorio.pdf');
+
+    Route::get('/devolucoes', [VendaController::class, 'devolucao'])->name('devolucoes.devolucao');
+    Route::delete('/devolucoes/{id}', [VendaController::class, 'eliminarVenda'])->name('devolucoes.eliminar');
 
 });
 //Auth::routes();

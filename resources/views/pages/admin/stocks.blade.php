@@ -76,13 +76,12 @@
                 <div class="container-fluid">
                    <form action="{{route('stock.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
-                         <input type="text" name="id_funcionario" value="{{Auth::guard('funcionario')->user()->id}}">
+                         <input type="hidden" name="id_funcionario" value="{{Auth::guard('funcionario')->user()->id}}">
                          <input type="hidden" name="id_produto" id="id_produto" value="{{ $valor->id ?? '' }}">
                        @if($valor)
                             <p><strong>Nome do Produto : </strong>{{ $valor->nome }}</p>
                         @else
                         <p><strong>Produto Selecionado: </strong><span id="nomeProdutoSelecionado">Selecione um produto</span></p>
-                        <input type="hidden" name="id_produto" id="id_produto">
                         @endif
                          <div class="form-group">
                             <label for="preco">Preço</label>
