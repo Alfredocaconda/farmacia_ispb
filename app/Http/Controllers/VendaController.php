@@ -39,7 +39,7 @@ class VendaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function addToCart(Request $request)
+    public function adicionar_carrinho(Request $request)
     {
         $request->validate([
             'stock_id' => 'required|exists:stocks,id',
@@ -82,7 +82,7 @@ class VendaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function clearCart()
+    public function apagar_carrinho()
     {
         Session::forget('cart');
         return back();
@@ -90,7 +90,7 @@ class VendaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function checkout(Request $request)
+    public function store(Request $request)
     {
         $cart = session()->get('cart', []);
 

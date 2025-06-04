@@ -65,16 +65,16 @@ Route::group(['middleware'=>'auth'],function(){
     Route::get('/vendas', [VendaController::class, 'index'])->name('vendas.index');
 
     // Adiciona item ao carrinho
-    Route::post('/vendas/adicionar', [VendaController::class, 'addToCart'])->name('vendas.add');
+    Route::post('/vendas/adicionar', [VendaController::class, 'adicionar_carrinho'])->name('vendas.add');
 
     // Remove item do carrinho
     Route::get('/vendas/remover/{id}', [VendaController::class, 'removeFromCart'])->name('vendas.remove');
 
     // Limpa o carrinho
-    Route::get('/vendas/limpar', [VendaController::class, 'clearCart'])->name('vendas.clear');
+    Route::get('/vendas/limpar', [VendaController::class, 'apagar_carrinho'])->name('vendas.clear');
 
     // Finaliza a venda
-    Route::post('/vendas/finalizar', [VendaController::class, 'checkout'])->name('vendas.checkout');
+    Route::post('/vendas/finalizar', [VendaController::class, 'store'])->name('vendas.store');
 
     Route::get('/vendas/relatorio', [VendaController::class, 'relatorio'])->name('vendas.relatorio');
     Route::get('/vendas/imprimir/{codigo_fatura}', [VendaController::class, 'imprimir'])->name('vendas.imprimir');
