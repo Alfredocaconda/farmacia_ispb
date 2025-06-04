@@ -93,40 +93,39 @@ class VendaController extends Controller
     public function checkout(Request $request)
     {
         $cart = session()->get('cart', []);
-            if (empty($cart)) {
-                return redirect()->back()->with('ERRO', 'O carrinho está vazio.');
-            }
 
-            $total = 0;
-            foreach ($cart as $item) {
-                $total += $item['preco'] * $item['quantidade'];
-            }
+        if (empty($cart)) {
+            return redirect()->back()->with('ERRO', 'O carrinho está vazio.');
+        }
 
-            $valor_entregue = $request->valor_entregue;
+        $total = 0;
+        foreach ($cart as $item) {
+            $total += $item['preco'] * $item['quantidade'];
+        }
 
-            if ($valor_entregue < $total) {
-                return redirect()->back()->with('ERRO', 'O valor entregue é menor que o total da compra.');
-            }
+        $valor_entregue = $request->valor_entregue;
 
-            $troco = $valor_entregue - $total;
+        if ($valor_entregue < $total) {
+            return redirect()->back()->with('ERRO', 'O valor entregue é menor que o total da compra.');
+        }
 
-            
+        $troco = $valor_entregue - $total;
 
-            $anoAtual = Carbon::now()->year;
+        $anoAtual = Carbon::now()->year;
 
-            // Buscar o último código de venda do ano atual
-            $ultimaVenda = DB::table('vendas')
-                ->whereYear('data_venda', $anoAtual)
-                ->orderByDesc('id')
-                ->first();
+        // Buscar o último código de venda do ano atual
+        $ultimaVenda = DB::table('vendas')
+            ->whereYear('data_venda', $anoAtual)
+            ->orderByDesc('id')
+            ->first();
 
-            if ($ultimaVenda && preg_match('/^' . $anoAtual . '-(\d{4})$/', $ultimaVenda->codigo_fatura, $matches)) {
-                $numeroSequencial = (int) $matches[1] + 1;
-            } else {
-                $numeroSequencial = 1;
-            }
+        if ($ultimaVenda && preg_match('/^' . $anoAtual . '-(\d{4})$/', $ultimaVenda->codigo_fatura, $matches)) {
+            $numeroSequencial = (int) $matches[1] + 1;
+        } else {
+            $numeroSequencial = 1;
+        }
 
-            $codigo_fatura = $anoAtual . '-' . str_pad($numeroSequencial, 4, '0', STR_PAD_LEFT);
+        $codigo_fatura = $anoAtual . '-' . str_pad($numeroSequencial, 4, '0', STR_PAD_LEFT);
 
         try {
             foreach ($cart as $item) {
@@ -140,19 +139,26 @@ class VendaController extends Controller
                 $venda->preco_unitario = $item['preco'];
                 $venda->subtotal = $subtotal;
                 $venda->data_venda = now();
-                $venda->funcionario_id=$request->id_funcionario;// se tiver controle de usuário
+                $venda->funcionario_id = $request->id_funcionario;
                 $venda->save();
 
                 // Atualiza o estoque
                 $stock = Stock::find($item['id']);
-                $stock->qtd_stock -= $item['quantidade'];
-                $stock->save();
+                if ($stock) {
+                    $stock->qtd_stock -= $item['quantidade'];
+                    $stock->save();
                 }
-
+            }
+             // Armazena valor entregue e troco na sessão para exibir depois na fatura
+            session([
+                'valor_entregue_' . $codigo_fatura => $valor_entregue,
+                'troco_' . $codigo_fatura => $troco,
+            ]);
+            // Limpa o carrinho da sessão
             session()->forget('cart');
 
-            return redirect()->route('vendas.index')->with('codigo_fatura', $codigo_fatura);
-
+            // Redireciona para a rota que mostra a fatura
+            return redirect()->route('vendas.imprimir', ['codigo_fatura' => $codigo_fatura]);
 
         } catch (\Exception $e) {
             return redirect()->back()->with('ERRO', 'Erro ao finalizar venda: ' . $e->getMessage());
@@ -271,22 +277,26 @@ class VendaController extends Controller
 
         return redirect()->back()->with('success', 'Produto devolvido e removido da venda com sucesso.');
     }
-    
+     /**
+     * Display a listing of the resource.
+     */
     public function imprimir($codigo_fatura)
     {
-        $vendas = Venda::where('codigo_fatura', $codigo_fatura)
-            ->with(['produto', 'funcionario'])
+        $vendas = Venda::with(['produto', 'funcionario'])
+            ->where('codigo_fatura', $codigo_fatura)
             ->get();
 
-        if ($vendas->isEmpty()) {
-            return redirect()->route('vendas.index')->with('ERRO', 'Venda não encontrada.');
-        }
+        $troco = request()->query('troco', 0);
 
-        // Dados do funcionário (todos os registros têm o mesmo)
-        $funcionario = $vendas->first()->funcionario;
+        $funcionario = $vendas->first()->funcionario ?? null;
+        $valor_entregue = session('valor_entregue_' . $codigo_fatura);
+        $troco = session('troco_' . $codigo_fatura);
 
-        return view('pages.factura.imprimir', compact('vendas', 'funcionario'));
+        return view('pages.factura.imprimir', [
+            'vendas' => $vendas,
+            'funcionario' => $funcionario,
+            'valor_entregue' => $valor_entregue,
+            'troco' => $troco,
+        ]);
     }
-
-
 }

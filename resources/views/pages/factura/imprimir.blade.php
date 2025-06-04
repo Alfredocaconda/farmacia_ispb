@@ -4,34 +4,48 @@
     <meta charset="UTF-8">
     <title>Recibo - {{ $vendas[0]->codigo_fatura }}</title>
     <style>
-        body {
-            font-family: monospace;
-            font-size: 12px;
-            width: 280px;
-            margin: auto;
+        @media print {
+            body {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 20mm;
+                font-family: Arial, sans-serif;
+                font-size: 12pt;
+                overflow: hidden;
+            }
         }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
         .center { text-align: center; }
-        .border-top { border-top: 1px dashed #000; margin-top: 10px; }
-        .border-bottom { border-bottom: 1px dashed #000; margin-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; }
-        td { padding: 2px 0; }
+        .border-top { border-top: 1px solid #000; margin-top: 20px; padding-top: 10px; }
+        .border-bottom { border-bottom: 1px solid #000; margin-bottom: 20px; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border-bottom: 1px solid #ccc; padding: 8px; text-align: left; }
         .totais td { font-weight: bold; }
+        .right { text-align: right; }
     </style>
 </head>
-<body onload="window.print()">
+<body >
 
     <div class="center">
-        <h3>Farmácia Boa Saúde</h3>
+        <h2>Farmácia Boa Saúde</h2>
         <p>NIF: 123456789</p>
         <p>Av. Principal, Bairro Central</p>
         <p>Telefone: 999-999-999</p>
     </div>
 
-    <div class="border-top border-bottom center">
+    <div class="border-top border-bottom">
         <p><strong>RECIBO DE VENDA</strong></p>
-        <p>Fatura Nº: {{ $vendas[0]->codigo_fatura }}</p>
-        <p>Data: {{ \Carbon\Carbon::parse($vendas[0]->data_venda)->format('d/m/Y H:i') }}</p>
-        <p>Funcionário: {{ $funcionario->nome ?? 'Desconhecido' }}</p>
+        <p><strong>Fatura Nº:</strong> {{ $vendas[0]->codigo_fatura }}</p>
+        <p><strong>Data:</strong> {{ \Carbon\Carbon::parse($vendas[0]->data_venda)->format('d/m/Y H:i') }}</p>
     </div>
 
     <table>
@@ -39,7 +53,8 @@
             <tr>
                 <th>Produto</th>
                 <th>Qtd</th>
-                <th>Preço</th>
+                <th>Preço Unit.</th>
+                <th>Subtotal</th>
             </tr>
         </thead>
         <tbody>
@@ -48,6 +63,7 @@
                 <tr>
                     <td>{{ $venda->produto->nome ?? 'Removido' }}</td>
                     <td>{{ $venda->quantidade }}</td>
+                    <td>{{ number_format($venda->preco_unitario, 2, ',', '.') }}</td>
                     <td>{{ number_format($venda->subtotal, 2, ',', '.') }}</td>
                 </tr>
                 @php $total += $venda->subtotal; @endphp
@@ -55,18 +71,34 @@
         </tbody>
     </table>
 
-    <hr>
-    <table class="totais">
+    <table class="totais" style="margin-top: 30px;">
         <tr>
             <td>Total:</td>
-            <td style="text-align: right">{{ number_format($total, 2, ',', '.') }}</td>
+            <td class="right">{{ number_format($total, 2, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td>Valor Entregue:</td>
+            <td class="right">{{ number_format($valor_entregue, 2, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td>Troco:</td>
+            <td class="right">{{ number_format($troco, 2, ',', '.') }}</td>
         </tr>
     </table>
-
+    <div class="border-top border-bottom">
+        <p><strong>Funcionário:</strong> {{ $funcionario->nome ?? 'Desconhecido' }}</p>
+    </div>
     <div class="center border-top">
         <p>Obrigado pela preferência!</p>
         <p>Volte sempre!</p>
     </div>
-
+<script>
+        window.onload = function() {
+            window.print();
+            setTimeout(function () {
+                window.location.href = "{{ route('vendas.index') }}";
+            }, 1000);
+        };
+    </script>
 </body>
 </html>
