@@ -26,7 +26,8 @@
       <div class="iq-sidebar  sidebar-default ">
           <div class="iq-sidebar-logo d-flex align-items-center justify-content-between">
               <a href="{{url('/dashboard')}}" class="header-logo">
-                  <img src="{{asset('imagem/logotipo.jpeg')}}" class="img-fluid rounded-normal light-logo" alt="logo"><h5 class="logo-title light-logo ml-3">FARMÁCIA</h5>
+                  <img src="{{ asset('images/logo.png') }}" class="img-fluid rounded-normal light-logo" alt="logo">
+                  <h5 class="logo-title light-logo ml-3">FARMÁCIA</h5>
               </a>
               <div class="iq-menu-bt-sidebar ml-0">
                   <i class="las la-bars wrapper-menu"></i>
@@ -96,7 +97,7 @@
                   <div class="iq-navbar-logo d-flex align-items-center justify-content-between">
                       <i class="ri-menu-line wrapper-menu"></i>
                       <a href="" class="header-logo">
-                          <img src="{{asset('images/logo.png')}}" class="img-fluid rounded-normal" alt="logo">
+                          <img src="{{ asset('images/logo.png') }}" class="img-fluid rounded-normal" alt="logo">
                           <h5 class="logo-title ml-3">FARMÁCIA</h5>
 
                       </a>
@@ -216,7 +217,7 @@
                             </ul>
                         </div>
                         <div class="col-lg-6 text-right">
-                            <span class="mr-1"><script>document.write(new Date().getFullYear())</script>©</span> <a href="#" class="">FARMÁCIA 4 DE SETEMBRO</a>.
+                            <span class="mr-1"><script>document.write(new Date().getFullYear())</script>©</span> <a href="#" class="">SMILE FARMA & ODONTO-COMERÇIO E SERVIÇOS, LDA</a>.
                         </div>
                     </div>
                 </div>

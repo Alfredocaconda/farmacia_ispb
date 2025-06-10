@@ -36,9 +36,9 @@
 <body >
 
     <div class="center">
-        <h2>Farmácia Boa Saúde</h2>
-        <p>NIF: 123456789</p>
-        <p>Av. Principal, Bairro Central</p>
+        <h2>SMILE FARMA & ODONTO-COMERÇIO E SERVIÇOS, LDA</h2>
+        <p>NIF: 5001204530</p>
+        <p>Rua José Anchieta e Frederico Welwitsch,Nº 83/85</p>
         <p>Telefone: 999-999-999</p>
     </div>
 

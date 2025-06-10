@@ -5,7 +5,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex align-items-center">
             <img src="{{ asset('images/logo.png') }}" alt="Logo da Farmácia" style="height: 50px; margin-right: 10px;">
-            <h3 class="mb-0">FARMÁCIA 5 DE SETEMBRO</h3>
+            <h3 class="mb-0">SMILE FARMA & ODONTO-COMERÇIO E SERVIÇOS, LDA</h3>
         </div>
         <div class="text-end">
             <div><strong>Funcionário:</strong> {{ Auth::guard('funcionario')->user()->nome ?? 'Desconhecido' }}</div>
@@ -86,7 +86,7 @@
                     </tbody>
                 </table>
                 <p><strong>Total Geral:</strong> {{ number_format($total, 2) }} Kz</p>
-                <form id="formFinalizarVenda" action="{{ route('vendas.checkout') }}" method="POST">
+                <form id="formFinalizarVenda" action="{{ route('vendas.store') }}" method="POST">
                     @csrf
                     <input type="hidden" name="id_funcionario" value="{{ Auth::guard('funcionario')->user()->id }}">
                     <input type="hidden" id="campoImprimir" name="imprimir" value="nao">
