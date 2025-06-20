@@ -63,7 +63,7 @@ class ProdutoController extends Controller
             return redirect()->back()->with("SUCESSO",$request->filled('id') ? "PRODUTO ACTUALIZADO COM SUCESSO" : "PRODUTO CADASTRADO COM SUCESSO");
 
         } catch (validectionException $e) {
-            //throw $th;
+            
             return redirect()->back()->withErros($e->validator)->withInput();
         } catch(QueryException $e){
             return redirect()->back()->with("ERROR","ERRO AO SALVAR PRODUTO. TENTE NOVAMENTE");

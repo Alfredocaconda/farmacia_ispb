@@ -10,14 +10,14 @@ use App\Models\Funcionario;
 class FuncionarioAuthController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * funcao para mostrar o login.
      */
     public function showLoginForm()
     {
         return view('auth.login');
     }
     /**
-     * Display a listing of the resource.
+     * funcao para fazer o login.
      */
     public function login(Request $request)
     {
@@ -39,7 +39,7 @@ class FuncionarioAuthController extends Controller
             return back()->withErrors(['senha' => 'Senha incorreta.'])->withInput();
         }
 
-        // Faz login manualmente
+        
         Auth::guard('funcionario')->login($user);
 
         $request->session()->regenerate();
@@ -54,7 +54,7 @@ class FuncionarioAuthController extends Controller
         return back()->withErrors(['email' => 'Usuário não autorizado.'])->withInput();
     }
     /**
-     * Display a listing of the resource.
+     * funcao para fazer logaut.
      */
     public function logout(Request $request)
     {
@@ -66,11 +66,12 @@ class FuncionarioAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Agora você ainda consegue usar $funcao
+        
         if ($funcao === 'Gerente') {
-            return redirect()->route('dashboard'); // redireciona para dashboard
+            // redireciona para dashboard
+            return redirect()->route('dashboard'); 
         }
-
-        return redirect()->route('login'); // redireciona para login
+        // redireciona para login
+        return redirect()->route('login'); 
     }
 }
