@@ -14,6 +14,19 @@
         <link rel="stylesheet" href="{{asset('vendor/remixicon/fonts/remixicon.css')}}"> 
         <!-- Favicon -->
         <link href="img/favicon.ico" rel="icon">
+        <style>
+           .linha-caducada td {
+                background-color: #ffe5e5 !important;
+                color: red !important;
+                font-weight: bold;
+            }
+
+            .linha-baixa-verde td {
+                color: green !important;
+                font-weight: bold;
+            }
+        </style>
+
   </head>
   <body class="  ">
     <!-- loader Start -->
@@ -153,13 +166,15 @@
                                                     <p class="mb-0">{{Auth::guard('funcionario')->user()->funcao}}</p>
                                                   @endif
                                                   <div class="d-flex align-items-center justify-content-center mt-3">
-                                                      <a href="" class="btn border mr-2">Perfil</a>
-                                                      <a class="btn border" href="{{route('logout')}}">
-                                                       {{ __('Sair') }}
-                                                   </a>
-                                                   <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                                       @csrf
-                                                   </form>
+                                                    <a href="" class="btn border mr-2">Perfil</a>
+                                                    <!-- Link que aciona o logout -->
+                                                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                        <i class="fa fa-sign-out-alt"></i> Sair
+                                                    </a>
+                                                    <!-- Formulário escondido que envia POST -->
+                                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                        @csrf
+                                                    </form>
                                                   </div>
                                               </div>
                                           </div>

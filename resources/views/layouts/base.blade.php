@@ -20,6 +20,10 @@
                 overflow-y: auto;
                 display: block;
             }
+            .linha-baixa-verde td {
+                color: green !important;
+                font-weight: bold;
+            }
         </style>
 
 </head>

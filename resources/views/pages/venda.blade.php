@@ -16,7 +16,7 @@
             @else
                 <form action="{{ route('logout') }}" method="POST" class="d-inline">
                     @csrf
-                    <button type="submit" class="btn btn-sm btn-danger">SAIR</button>
+                    <button type="submit" class="btn btn-sm btn-danger"> <i class="fa fa-sign-out-alt"></i> SAIR</button>
                 </form>
             @endif
         </div>
@@ -48,7 +48,12 @@
                     </thead>
                     <tbody>
                         @foreach($stocks as $stock)
-                        <tr>
+                        @php
+                            $caducado = \Carbon\Carbon::parse($stock->caducidade)->isPast();
+                            if ($caducado) continue;
+                            $baixo_stock = $stock->qtd_stock < 10;
+                        @endphp
+                        <tr class="{{ ($baixo_stock ? 'linha-baixa-verde' : '') }}">
                             <td>{{ $stock->produto->nome }}</td>
                             <td>{{ number_format($stock->preco, 2) }} Kz</td>
                             <td>{{ $stock->qtd_stock }}</td>

@@ -14,7 +14,7 @@
                                 </div>
                                 <div>
                                     <p class="mb-2">Total de Funcionário</p>
-                                    <h4></h4>
+                                    <h4>{{ \App\Models\Funcionario::count() }}</h4>
                                 </div>
                             </div>
                             <div class="iq-progress-bar mt-2">
@@ -33,7 +33,7 @@
                                 </div>
                                 <div>
                                     <p class="mb-2">Total de Produtos</p>
-                                    <h4></h4>
+                                    <h4>{{ \App\Models\Produto::count() }}</h4>
                                 </div>
                             </div>
                             <div class="iq-progress-bar mt-2">
@@ -52,7 +52,7 @@
                                 </div>
                                 <div>
                                     <p class="mb-2">Total de Produtos no Stock</p>
-                                    <h4></h4>
+                                    <h4>{{ \App\Models\Stock::sum('qtd_stock') }}</h4>
                                 </div>
                             </div>
                             <div class="iq-progress-bar mt-2">
@@ -72,7 +72,7 @@
                                 </div>
                                 <div>
                                     <p class="mb-2">Total de Produtos Caducados</p>
-                                    <h4></h4>
+                                    <h4>{{ \App\Models\Stock::whereDate('caducidade', '<', \Carbon\Carbon::today())->count() }}</h4>
                                 </div>
                             </div>
                             <div class="iq-progress-bar mt-2">

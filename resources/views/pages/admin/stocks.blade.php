@@ -36,23 +36,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                      @foreach ($stock as $dados)
-                            <tr>
-                                <td>{{$dados->produto->nome." / ".$dados->produto->descricao." / ".$dados->produto->categoria}}</td>
-                                <td>{{$dados->preco." KZ"}}</td>
-                                <td>{{$dados->qtd_stock}}</td>
-                                <td>{{$dados->data_entrada}}</td>
-                                <td>{{$dados->caducidade}}</td>
-                                <td>{{$dados->funcionario->nome}}</td>
-                                <td>
+                    @foreach ($stock as $dados)
+                        @php
+                            $caducado = \Carbon\Carbon::parse($dados->caducidade)->isPast();
+                            $baixo_stock = $dados->qtd_stock < 10;
+                        @endphp
+                            <tr class="{{ $caducado ? 'linha-caducada' : ($baixo_stock ? 'linha-baixa-verde' : '') }}">
+                            <td>{{ $dados->produto->nome." / ".$dados->produto->descricao." / ".$dados->produto->categoria }}</td>
+                            <td>{{ $dados->preco." KZ" }}</td>
+                            <td>{{ $dados->qtd_stock }}</td>
+                            <td>{{ $dados->data_entrada }}</td>
+                            <td>{{ $dados->caducidade }}</td>
+                            <td>{{ $dados->funcionario->nome }}</td>
+                            <td>
                                 <a href="#AumentarStock" data-toggle="modal" class="text-success" onclick="abrirModalAumentar({{ $dados->id }}, '{{ $dados->produto->nome }}')">
-                                  <i class="fa fa-plus-circle"></i>
+                                    <i class="fa fa-plus-circle"></i>
                                 </a>
                                 <a href="#Cadastrar" data-toggle="modal" class="text-primary" onclick='editar(@json($dados))'><i class="fa fa-edit"></i></a>
-                                <a href="{{route('stock.destroy',$dados->id)}}" class="text-danger"><i class="fa fa-trash"></i></a>
-                                </td>
-                            </tr>
-                        @endforeach
+                                <a href="{{ route('stock.destroy', $dados->id) }}" class="text-danger"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                     </table>
                 </div>
@@ -61,7 +65,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modal -->
 <div class="modal fade" id="Cadastrar" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -78,6 +81,8 @@
                     @csrf
                          <input type="hidden" name="id_funcionario" value="{{Auth::guard('funcionario')->user()->id}}">
                          <input type="hidden" name="id_produto" id="id_produto" value="{{ $valor->id ?? '' }}">
+                         <input type="hidden" name="id" id="id">
+
                        @if($valor)
                             <p><strong>Nome do Produto : </strong>{{ $valor->nome }}</p>
                         @else
@@ -148,6 +153,7 @@
         document.getElementById('qtd_stock').value = valor.qtd_stock;
         document.getElementById('caducidade').value = valor.caducidade;
         document.getElementById('id_produto').value = valor.id_produto;
+
 
         if (valor.produto) {
             document.getElementById('nomeProdutoSelecionado').textContent = valor.produto.nome + " / " + valor.produto.descricao + " / " + valor.produto.categoria;
