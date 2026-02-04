@@ -37,11 +37,12 @@
                     </thead>
                     <tbody>
                     @foreach ($stock as $dados)
-                        @php
-                            $caducado = \Carbon\Carbon::parse($dados->caducidade)->isPast();
-                            $baixo_stock = $dados->qtd_stock < 10;
-                        @endphp
-                            <tr class="{{ $caducado ? 'linha-caducada' : ($baixo_stock ? 'linha-baixa-verde' : '') }}">
+                            <tr class="
+                                @if($dados->alerta == 'expirado') table-danger
+                                @elseif($dados->alerta == 'critico') table-warning
+                                @elseif($dados->alerta == 'atencao') table-info
+                                @endif
+                            ">
                             <td>{{ $dados->produto->nome." / ".$dados->produto->descricao." / ".$dados->produto->categoria }}</td>
                             <td>{{ $dados->preco." KZ" }}</td>
                             <td>{{ $dados->qtd_stock }}</td>
@@ -64,6 +65,7 @@
         </div>
         </div>
     </div>
+    
 </div>
 <!-- Modal -->
 <div class="modal fade" id="Cadastrar" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">

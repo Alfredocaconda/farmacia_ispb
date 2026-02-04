@@ -4,7 +4,6 @@
         <select name="funcao" id="funcao" class="form-control">
             <option value="Gerente">Gerente</option>
             <option value="Farmaceutico">Farmaceutico</option>
-            <option value="Tecnico">Tecnico</option> 
         </select>
     </div>
 </div>

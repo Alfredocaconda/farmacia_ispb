@@ -111,7 +111,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-12 col-md-6 col-lg-6">
-                                <label for="n_bilhete">Número do BI</label>
+                                <label for="n_bilhete">Número do BI <span style="color: red;">*</span></label>
                                 <div class="form-input">
                                     <input type="text" 
                                            class="form-control" 

@@ -3,7 +3,7 @@
 
 
 <div class="form-group col-12 col-md-6 col-lg-6">
-    <label for="{{ $id }}">{{ $titulo }}</label>
+    <label for="{{ $id }}">{{ $titulo }} <span style="color: red;">*</span></label>
     <div class="form-input">
         <input type="{{ $type }}" 
                class="form-control @error($name) is-invalid @enderror"

@@ -13,8 +13,10 @@
                                     <img src="{{asset('images/page-img/16.jpg')}}" class="img-fluid" alt="image">
                                 </div>
                                 <div>
-                                    <p class="mb-2">Total de Funcionário</p>
-                                    <h4>{{ \App\Models\Funcionario::count() }}</h4>
+                                    <a href="{{ route('funcionario.index') }}">
+                                        <p class="mb-2">Total de Funcionário</p>
+                                    <h4>{{ \App\Models\Funcionario::count() }}</h4></a>
+                                    
                                 </div>
                             </div>
                             <div class="iq-progress-bar mt-2">
@@ -32,8 +34,10 @@
                                     <img src="{{asset('images/product/2.png')}}" class="img-fluid" alt="image">
                                 </div>
                                 <div>
-                                    <p class="mb-2">Total de Produtos</p>
-                                    <h4>{{ \App\Models\Produto::count() }}</h4>
+                                    <a href="{{ route('produto.index') }}">
+                                        <p class="mb-2">Total de Produtos</p>
+                                    <h4>{{ \App\Models\Produto::count() }}</h4></a>
+                                    
                                 </div>
                             </div>
                             <div class="iq-progress-bar mt-2">
@@ -51,8 +55,11 @@
                                     <img src="{{asset('images/product/2.png')}}" class="img-fluid" alt="image">
                                 </div>
                                 <div>
-                                    <p class="mb-2">Total de Produtos no Stock</p>
+                                    <a href="{{ route('stock.index') }}">
+                                        <p class="mb-2">Total de Produtos no Stock</p>
                                     <h4>{{ \App\Models\Stock::sum('qtd_stock') }}</h4>
+                                </a>
+                                    
                                 </div>
                             </div>
                             <div class="iq-progress-bar mt-2">
@@ -71,8 +78,11 @@
                                     <img src="{{asset('images/product/3.png')}}" class="img-fluid" alt="image">
                                 </div>
                                 <div>
-                                    <p class="mb-2">Total de Produtos Caducados</p>
-                                    <h4>{{ \App\Models\Stock::whereDate('caducidade', '<', \Carbon\Carbon::today())->count() }}</h4>
+                                    <a href="{{ route('vendas.relatorio') }}">
+                                        <p class="mb-2">Total de Produtos Vendidos</p>
+                                    <h4>{{ \App\Models\venda::sum('quantidade') }}</h4>
+                                    </a>
+                                    
                                 </div>
                             </div>
                             <div class="iq-progress-bar mt-2">

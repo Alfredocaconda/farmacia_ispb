@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\stock;
 use App\Models\produto;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,19 +13,37 @@ class StockController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index($id = null){
-        if ($id) {
-            // Buscar um único produto e seus stocks
-            $valor = produto::orderby('nome','desc')->findOrFail($id);
-            $stock = stock::with('produto', 'funcionario')->where('id_produto', $id)->get();
-        } else {
-            // Buscar todos os produtos e todos os stocks
-            $valor = null;
-            $stock = stock::with('produto', 'funcionario')->get();
-        }
+        public function index($id = null){
+            if ($id) {
+                // Buscar um único produto e seus stocks
+                $valor = produto::orderby('nome','desc')->findOrFail($id);
+                $stock = stock::with('produto', 'funcionario')->where('id_produto', $id)->get();
+            } else {
+                // Buscar todos os produtos e todos os stocks
+                $valor = null;
+                $stock = stock::with('produto', 'funcionario')->get();
+            }
+                // Verificar dias restantes para validade
+                foreach ($stock as $item) {
 
-        return view('pages.admin.stocks', compact('stock', 'valor'));
-    }
+                    if ($item->caducidade) {
+                        $dias = Carbon::now()->diffInDays($item->caducidade, false);
+
+                        if ($dias <= 0) {
+                            $item->alerta = 'expirado';
+                        } elseif ($dias <= 5) {
+                            $item->alerta = 'critico';
+                        } elseif ($dias <= 10) {
+                            $item->alerta = 'atencao';
+                        } else {
+                            $item->alerta = 'normal';
+                        }
+                    } else {
+                        $item->alerta = 'sem_validade';
+                    }
+                }
+            return view('pages.admin.stocks', compact('stock', 'valor'));
+        }
        /**
      * Remove the specified resource from storage.
      */

@@ -96,6 +96,14 @@
                     <input type="hidden" name="id_funcionario" value="{{ Auth::guard('funcionario')->user()->id }}">
                     <input type="hidden" id="campoImprimir" name="imprimir" value="nao">
                     <div class="mb-2">
+                        <label for="forma_pagamento" class="form-label">Forma de pagamento</label>
+                        <select name="forma_pagamento" id="forma_pagamento" class="form-select" required>
+                            <option value="">Selecione</option>
+                            <option value="dinheiro">Dinheiro</option>
+                            <option value="cartao_credito">Cartão de Crédito</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
                         <label for="valor_entregue" class="form-label">Valor entregue pelo cliente</label>
                         <input type="number" name="valor_entregue" id="valor_entregue" class="form-control" step="0.01" min="{{ $total }}" required>
                     </div>

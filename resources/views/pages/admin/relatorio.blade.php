@@ -40,6 +40,7 @@
                         <th>Quantidade</th>
                         <th>Preço Unitário</th>
                         <th>Subtotal</th>
+                        <th>Forma Pagamento</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,6 +56,7 @@
                             <td>{{ $venda->quantidade }}</td>
                             <td>{{ number_format($venda->preco_unitario, 2, ',', '.') }}</td>
                             <td>{{ number_format($venda->subtotal, 2, ',', '.') }}</td>
+                            <td>{{ $venda->forma_pagamento }}</td>
                         </tr>
                     @empty
                         <tr>
