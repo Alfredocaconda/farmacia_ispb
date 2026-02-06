@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->double('preco');
             $table->integer('qtd_stock');
+            $table->string('codigo_barra');
+            $table->string('fornecedor');
             $table->string('caducidade');
             $table->date('data_entrada');
             $table->foreignId('id_funcionario')->constrained('funcionarios')->onDelete('cascade');

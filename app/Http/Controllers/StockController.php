@@ -54,8 +54,27 @@ class StockController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         try {
+          
+             $rules = [
+                'fornecedor' => ['required', 'string', 'regex:/^[a-zA-ZÀ-ÿ\s]+$/'],
+                'preco' => ['required'],
+                'codigo_barra' => ['required'],
+                'qtd_stock' => ['required'],
+                'caducidade' => ['required'],
+            ];
+
+            $request->validate($rules, [
+                'fornecedor.required' => 'O fornecedor É OBRIGATÓRIO!',
+                'fornecedor.regex' => 'O NOME DO FORNECEDOR DEVE CONTER APENAS LETRAS!',
+                'codigo_barra.required' => 'CODIGO DE BARRA É OBRIGATÓRIA!',
+                'qtd_stock.required' => 'QUANTIDADE É OBRIGATÓRIA!',
+                'caducidade.required' => 'CADUCIDADE É OBRIGATÓRIA!',
+                'preco.required' => 'PREÇO É OBRIGATÓRIA!',
+            ]);
+
               // Se for para aumentar a quantidade
         if ($request->filled('id') && $request->tipo === 'aumentar') {
             $stock = Stock::find($request->id);
@@ -77,6 +96,8 @@ class StockController extends Controller
                 $valor->id_funcionario =$request->id_funcionario;
                 $valor->id_produto = $request->id_produto;
                 $valor->preco = $request->preco;
+                $valor->fornecedor = $request->fornecedor;
+                $valor->codigo_barra = $request->codigo_barra;
                 $valor->qtd_stock = $request->qtd_stock;
                 $valor->caducidade = $request->caducidade;
                 $valor->data_entrada = now();
@@ -92,6 +113,8 @@ class StockController extends Controller
                     $valor->qtd_stock += $request->qtd_stock;
                     $valor->preco = $request->preco;
                     $valor->caducidade = $request->caducidade;
+                    $valor->fornecedor = $request->fornecedor;
+                    $valor->codigo_barra = $request->codigo_barra;
                     $valor->data_entrada = now();
                     $valor->id_funcionario =$request->id_funcionario;
                     $valor->save();
@@ -103,6 +126,8 @@ class StockController extends Controller
                     $valor->id_funcionario =$request->id_funcionario;
                     $valor->id_produto = $request->id_produto;
                     $valor->preco = $request->preco;
+                    $valor->fornecedor = $request->fornecedor;
+                    $valor->codigo_barra = $request->codigo_barra;
                     $valor->qtd_stock = $request->qtd_stock;
                     $valor->caducidade = $request->caducidade;
                     $valor->data_entrada = now();

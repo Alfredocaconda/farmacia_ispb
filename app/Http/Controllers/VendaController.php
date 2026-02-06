@@ -27,6 +27,7 @@ class VendaController extends Controller
             ->when($search, function ($query, $search) {
                 return $query->whereHas('produto', function ($q) use ($search) {
                     $q->where('nome', 'like', '%' . $search . '%');
+                    $q->orwhere('codigo_barra', 'like', '%' . $search . '%');
                 });
             })
             ->get();

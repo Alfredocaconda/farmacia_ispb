@@ -26,10 +26,12 @@
                     <table id="datatable" class="table data-tables table-striped">
                     <thead>
                         <tr class="ligth">
-                            <th>Nome do Produto</th>
-                            <th>Preço Unitário</th>
-                            <th>Quantidade</th>
-                            <th>Data de Entrada</th>
+                            <th>Produto</th>
+                            <th>Preço </th>
+                            <th>QTD</th>
+                            <th>Data Entrada</th>
+                            <th>Codigo Barra</th>
+                            <th>Fornecedor</th>
                             <th>Caducidade</th>
                             <th>Funcionario</th>
                             <th></th>
@@ -47,6 +49,8 @@
                             <td>{{ $dados->preco." KZ" }}</td>
                             <td>{{ $dados->qtd_stock }}</td>
                             <td>{{ $dados->data_entrada }}</td>
+                            <td>{{ $dados->codigo_barra }}</td>
+                            <td>{{ $dados->fornecedor }}</td>
                             <td>{{ $dados->caducidade }}</td>
                             <td>{{ $dados->funcionario->nome }}</td>
                             <td>
@@ -90,32 +94,19 @@
                         @else
                         <p><strong>Produto Selecionado: </strong><span id="nomeProdutoSelecionado">Selecione um produto</span></p>
                         @endif
-                         <div class="form-group">
-                            <label for="preco">Preço</label>
-                            <div class="form-input">
-                                <input type="number" name="preco" id="preco" class="form-control" />
-                            </div>
+                        <div class="row">
+                            <x-input-normal id="preco" name="preco" type="number" titulo="Preço" alert="" />
+                            <x-input-normal id="qtd_stock" name="qtd_stock" type="number" titulo="Quantidade" alert="" />
+                            <x-input-normal id="fornecedor" name="fornecedor" type="text" titulo="Fornecedor" alert="" />
+                            <x-input-normal id="codigo_barra" name="codigo_barra" type="text" titulo="Codigo de Barra" alert="" />
+                            <x-input-normal id="caducidade" name="caducidade" type="date" titulo="Caducidade" alert="" />
                         </div>
-                         <div class="form-group">
-                            <label for="qtd_stock">Quantidade</label>
-                            <div class="form-input">
-                                <input type="number" name="qtd_stock" id="qtd_stock" class="form-control" />
-                            </div>
-                        </div>
-                         <div class="form-group">
-                            <label for="caducidade">Caducidade</label>
-                            <div class="form-input">
-                                <input type="date" name="caducidade" id="caducidade" class="form-control" />
-                            </div>
-                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <x-botao-form />
+                <div class="modal-footer">
+                    <x-botao-form />
             </form>
             </div>
-           
-
         </div>
     </div>
 </div>
@@ -152,6 +143,8 @@
         document.getElementById('id').value = valor.id;
         document.getElementById('preco').value = valor.preco;
         document.getElementById('preco').value = valor.preco;
+        document.getElementById('fornecedor').value = valor.fornecedor;
+        document.getElementById('codigo_barra').value = valor.codigo_barra;
         document.getElementById('qtd_stock').value = valor.qtd_stock;
         document.getElementById('caducidade').value = valor.caducidade;
         document.getElementById('id_produto').value = valor.id_produto;
@@ -166,6 +159,8 @@
         document.getElementById('id').value = "";
         document.getElementById('qtd_stock').value = "";
         document.getElementById('caducidade').value = "";
+        document.getElementById('fornecedor').value = "";
+        document.getElementById('codigo_barra').value = "";
         document.getElementById('preco').value = "";
         document.getElementById('id_produto').value = "";
     }
