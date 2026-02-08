@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('title', 'DASHBOARD')
 @section('principal')
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-8">

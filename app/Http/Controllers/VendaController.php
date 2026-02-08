@@ -34,7 +34,15 @@ class VendaController extends Controller
 
         $cart = Session::get('cart', []);
 
-        return view('pages.venda', compact('stocks', 'cart'));
+        $limiteMinimo = 5;
+
+        // Produtos com baixo stock
+        $baixoStock = Stock::with('produto')
+            ->where('qtd_stock', '<=', $limiteMinimo)
+            ->get();
+
+        $totalBaixoStock = $baixoStock->count();
+        return view('pages.venda', compact('baixoStock', 'totalBaixoStock','stocks', 'cart'));
     }
     
     /**

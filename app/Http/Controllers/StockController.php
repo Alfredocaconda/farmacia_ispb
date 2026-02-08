@@ -42,7 +42,15 @@ class StockController extends Controller
                         $item->alerta = 'sem_validade';
                     }
                 }
-            return view('pages.admin.stocks', compact('stock', 'valor'));
+                 $limiteMinimo = 5;
+
+        // Produtos com baixo stock
+        $baixoStock = Stock::with('produto')
+            ->where('qtd_stock', '<=', $limiteMinimo)
+            ->get();
+
+        $totalBaixoStock = $baixoStock->count();
+            return view('pages.admin.stocks', compact('stock', 'valor', 'baixoStock', 'totalBaixoStock'));
         }
        /**
      * Remove the specified resource from storage.

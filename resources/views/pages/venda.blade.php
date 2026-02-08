@@ -28,8 +28,7 @@
     @if (session('ERRO'))
         <div class="alert alert-danger">{{ session('ERRO') }}</div>
     @endif
-
-    <div class="row">
+           <div class="row">
         <div class="col-md-8">
             <div class="row justify-content-center mb-3">
                 <div class="col-md-6">

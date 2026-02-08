@@ -21,6 +21,17 @@
                         <p>{{session('SUCESSO')}}</p>
                     </div>
                 @endif
+                @if($totalBaixoStock > 0)
+                <ul class="list-group">
+                    @foreach($baixoStock as $item)
+                        <li class="list-group-item d-flex justify-content-between">
+                            {{ $item->produto->nome }}
+                            <span class="badge bg-danger">{{ $item->quantidade }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+                @endif
+
             <div class="card-body">
                 <div class="table-responsive">
                     <table id="datatable" class="table data-tables table-striped">
