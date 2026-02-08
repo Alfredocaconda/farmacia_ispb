@@ -68,11 +68,10 @@
                                     <img src="{{asset('images/caducidade.png')}}" class="img-fluid" alt="image">
                                 </div>
                                 <div>
-                                    <a href="{{ route('vendas.relatorio') }}">
+                                    <a href="{{ route('stock.index') }}">
                                         <p class="mb-2">Produtos Caducados</p>
-                                    <h4>{{ \App\Models\venda::sum('quantidade') }}</h4>
+                                        <h4>{{ \App\Models\Stock::whereDate('caducidade', '<', now())->count() }}</h4>
                                     </a>
-                                    
                                 </div>
                             </div>
                         </div>

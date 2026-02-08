@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('subtotal', 10, 2); // preco_unitario * quantidade
             $table->date('data_venda'); // data da venda
             $table->string('codigo_fatura');
+            $table->string('cliente');
             $table->string('forma_pagamento');
             $table->foreignId('funcionario_id')->constrained('funcionarios');
             $table->timestamps();

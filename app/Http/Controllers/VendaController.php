@@ -139,6 +139,7 @@ class VendaController extends Controller
                 $venda->quantidade = $item['quantidade'];
                 $venda->preco_unitario = $item['preco'];
                 $venda->subtotal = $subtotal;
+                $venda->cliente = $request->cliente;
                 $venda->forma_pagamento = $request->forma_pagamento;
                 $venda->data_venda = now();
                 $venda->funcionario_id = $request->id_funcionario;

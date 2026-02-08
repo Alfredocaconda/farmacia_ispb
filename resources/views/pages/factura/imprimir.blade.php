@@ -45,6 +45,7 @@
     <div class="border-top border-bottom">
         <p><strong>RECIBO DE VENDA</strong></p>
         <p><strong>Fatura Nº:</strong> {{ $vendas[0]->codigo_fatura }}</p>
+        <p><strong>Nome do Cliente:</strong> {{ $vendas[0]->cliente }}</p>
         <p><strong>Data:</strong> {{ \Carbon\Carbon::parse($vendas[0]->data_venda)->format('d/m/Y H:i') }}</p>
     </div>
 
@@ -90,7 +91,7 @@
     </div>
     <div class="center border-top">
         <p>Obrigado pela preferência!</p>
-        <p>Volte sempre!</p>
+        <p>Desejamos melhoria!</p>
     </div>
 <script>
         window.onload = function() {

@@ -95,6 +95,7 @@
                     @csrf
                     <input type="hidden" name="id_funcionario" value="{{ Auth::guard('funcionario')->user()->id }}">
                     <input type="hidden" id="campoImprimir" name="imprimir" value="nao">
+                    <x-input-normal id="cliente" name="cliente" type="text" titulo="Nome do Cliente" alert="" />
                     <div class="mb-2">
                         <label for="forma_pagamento" class="form-label">Forma de pagamento</label>
                         <select name="forma_pagamento" id="forma_pagamento" class="form-select" required>
